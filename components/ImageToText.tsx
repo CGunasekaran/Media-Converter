@@ -1,37 +1,37 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { useDropzone } from 'react-dropzone';
-import Tesseract from 'tesseract.js';
-import { MAX_FILE_SIZE, formatFileSize } from '@/lib/utils';
+import { useState } from "react";
+import { useDropzone } from "react-dropzone";
+import Tesseract from "tesseract.js";
+import { MAX_FILE_SIZE, formatFileSize } from "@/lib/utils";
 
 export default function ImageToText() {
   const [image, setImage] = useState<string | null>(null);
-  const [extractedText, setExtractedText] = useState<string>('');
+  const [extractedText, setExtractedText] = useState<string>("");
   const [loading, setLoading] = useState(false);
   const [progress, setProgress] = useState(0);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     accept: {
-      'image/*': ['.png', '.jpg', '.jpeg', '.webp', '.bmp']
+      "image/*": [".png", ".jpg", ".jpeg", ".webp", ".bmp"],
     },
     maxSize: MAX_FILE_SIZE,
     multiple: false,
     onDrop: async (acceptedFiles) => {
       if (acceptedFiles.length === 0) return;
-      
+
       const file = acceptedFiles[0];
       const reader = new FileReader();
-      
+
       reader.onload = async (e) => {
         const imageUrl = e.target?.result as string;
         setImage(imageUrl);
-        setExtractedText('');
+        setExtractedText("");
         await extractText(imageUrl);
       };
-      
+
       reader.readAsDataURL(file);
-    }
+    },
   });
 
   const extractText = async (imageUrl: string) => {
@@ -39,18 +39,18 @@ export default function ImageToText() {
     setProgress(0);
 
     try {
-      const result = await Tesseract.recognize(imageUrl, 'eng', {
+      const result = await Tesseract.recognize(imageUrl, "eng", {
         logger: (m) => {
-          if (m.status === 'recognizing text') {
+          if (m.status === "recognizing text") {
             setProgress(Math.round(m.progress * 100));
           }
-        }
+        },
       });
 
       setExtractedText(result.data.text);
     } catch (error) {
-      console.error('Error extracting text:', error);
-      alert('Failed to extract text from image');
+      console.error("Error extracting text:", error);
+      alert("Failed to extract text from image");
     } finally {
       setLoading(false);
     }
@@ -58,7 +58,7 @@ export default function ImageToText() {
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(extractedText);
-    alert('Text copied to clipboard!');
+    alert("Text copied to clipboard!");
   };
 
   return (
@@ -67,15 +67,15 @@ export default function ImageToText() {
         {...getRootProps()}
         className={`border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-colors ${
           isDragActive
-            ? 'border-indigo-500 bg-indigo-50'
-            : 'border-gray-300 hover:border-indigo-400'
+            ? "border-indigo-500 bg-indigo-50"
+            : "border-gray-300 hover:border-indigo-400"
         }`}
       >
         <input {...getInputProps()} />
         <div className="space-y-2">
           <div className="text-4xl">📷</div>
           <p className="text-lg font-medium text-white dark:text-white">
-            {isDragActive ? 'Drop the image here' : 'Drag & drop an image'}
+            {isDragActive ? "Drop the image here" : "Drag & drop an image"}
           </p>
           <p className="text-sm text-white/70 dark:text-white/70">
             or click to select (Max size: {formatFileSize(MAX_FILE_SIZE)})
@@ -87,7 +87,11 @@ export default function ImageToText() {
         <div className="grid md:grid-cols-2 gap-6">
           <div>
             <h3 className="font-semibold mb-2">Uploaded Image</h3>
-            <img src={image} alt="Uploaded" className="w-full rounded-lg border" />
+            <img
+              src={image}
+              alt="Uploaded"
+              className="w-full rounded-lg border"
+            />
           </div>
 
           <div>
@@ -102,7 +106,7 @@ export default function ImageToText() {
                 </button>
               )}
             </div>
-            
+
             {loading ? (
               <div className="space-y-2">
                 <div className="w-full bg-gray-200 rounded-full h-2">
