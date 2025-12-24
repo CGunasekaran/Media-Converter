@@ -16,4 +16,8 @@ export type TabType =
   | "batch-processor"
   | "background-remover"
   | "pdf-tools"
-  | "document-scanner";
+  | "document-scanner"
+  | "qrcode-tools"
+  | "barcode-tools"
+  | "svg-converter"
+  | "excel-csv-tools";

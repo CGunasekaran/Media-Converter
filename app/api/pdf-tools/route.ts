@@ -1,12 +1,24 @@
 import { NextRequest, NextResponse } from "next/server";
 import { PDFDocument, degrees, rgb, StandardFonts } from "pdf-lib";
-import * as pdfjsLib from "pdfjs-dist";
 
-// Set up PDF.js worker
-pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
+// Force dynamic rendering
+export const dynamic = 'force-dynamic';
+
+// Lazy load pdfjs-dist to avoid build issues
+let pdfjsLib: typeof import("pdfjs-dist") | null = null;
+
+async function getPdfjsLib() {
+  if (!pdfjsLib) {
+    pdfjsLib = await import("pdfjs-dist");
+    pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
+  }
+  return pdfjsLib;
+}
 
 export async function POST(request: NextRequest) {
   try {
+    await getPdfjsLib(); // Initialize pdfjs-dist
+    
     const formData = await request.formData();
     const files = formData.getAll("files") as File[];
     const operation = formData.get("operation") as string;
@@ -186,10 +198,11 @@ async function compressPDF(file: File): Promise<PDFDocument> {
 }
 
 async function extractTextFromPDF(file: File): Promise<string> {
+  const pdfjs = await getPdfjsLib();
   const bytes = await file.arrayBuffer();
   const uint8Array = new Uint8Array(bytes);
 
-  const loadingTask = pdfjsLib.getDocument({ data: uint8Array });
+  const loadingTask = pdfjs.getDocument({ data: uint8Array });
   const pdf = await loadingTask.promise;
 
   let fullText = "";

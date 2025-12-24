@@ -1,13 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
-import * as pdfjsLib from "pdfjs-dist";
 import { createCanvas } from "canvas";
 import sharp from "sharp";
 
-// Set up PDF.js worker
-pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
+// Force dynamic rendering
+export const dynamic = 'force-dynamic';
 
 export async function POST(request: NextRequest) {
   try {
+    // Dynamically import pdfjs-dist to avoid build-time issues
+    const pdfjsLib = await import("pdfjs-dist");
+    
+    // Set up PDF.js worker
+    pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
+    
     const formData = await request.formData();
     const file = formData.get("file") as File;
     const format = (formData.get("format") as string) || "png";
