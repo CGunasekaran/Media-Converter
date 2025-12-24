@@ -25,4 +25,5 @@ export type TabType =
   | "collage-maker"
   | "placeholder-generator"
   | "color-palette-extractor"
-  | "screenshot-tool";
+  | "screenshot-tool"
+  | "icon-generator";

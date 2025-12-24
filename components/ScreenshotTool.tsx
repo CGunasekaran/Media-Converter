@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import { useState, useRef, useEffect, useCallback } from 'react';
-import { downloadFile } from '@/lib/utils';
+import { useState, useRef, useEffect, useCallback } from "react";
+import { downloadFile } from "@/lib/utils";
 
-type Tool = 'pen' | 'line' | 'arrow' | 'rectangle' | 'circle' | 'text';
-type ExportFormat = 'png' | 'jpg' | 'webp';
+type Tool = "pen" | "line" | "arrow" | "rectangle" | "circle" | "text";
+type ExportFormat = "png" | "jpg" | "webp";
 
 interface Point {
   x: number;
@@ -23,107 +23,124 @@ interface DrawAction {
 
 export default function ScreenshotTool() {
   const [screenshot, setScreenshot] = useState<string | null>(null);
-  const [tool, setTool] = useState<Tool>('pen');
-  const [color, setColor] = useState('#FF0000');
+  const [tool, setTool] = useState<Tool>("pen");
+  const [color, setColor] = useState("#FF0000");
   const [lineWidth, setLineWidth] = useState(3);
   const [isDrawing, setIsDrawing] = useState(false);
   const [actions, setActions] = useState<DrawAction[]>([]);
   const [currentAction, setCurrentAction] = useState<DrawAction | null>(null);
-  const [exportFormat, setExportFormat] = useState<ExportFormat>('png');
-  const [textInput, setTextInput] = useState('');
+  const [exportFormat, setExportFormat] = useState<ExportFormat>("png");
+  const [textInput, setTextInput] = useState("");
   const [showTextInput, setShowTextInput] = useState(false);
   const [textPosition, setTextPosition] = useState<Point>({ x: 0, y: 0 });
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const displayCanvasRef = useRef<HTMLCanvasElement>(null);
 
-  const drawAction = useCallback((ctx: CanvasRenderingContext2D, action: DrawAction) => {
-    ctx.strokeStyle = action.color;
-    ctx.fillStyle = action.color;
-    ctx.lineWidth = action.lineWidth;
-    ctx.lineCap = 'round';
-    ctx.lineJoin = 'round';
+  const drawAction = useCallback(
+    (ctx: CanvasRenderingContext2D, action: DrawAction) => {
+      ctx.strokeStyle = action.color;
+      ctx.fillStyle = action.color;
+      ctx.lineWidth = action.lineWidth;
+      ctx.lineCap = "round";
+      ctx.lineJoin = "round";
 
-    switch (action.tool) {
-      case 'pen':
-        if (action.points && action.points.length > 1) {
-          ctx.beginPath();
-          ctx.moveTo(action.points[0].x, action.points[0].y);
-          action.points.forEach(point => ctx.lineTo(point.x, point.y));
-          ctx.stroke();
-        }
-        break;
+      switch (action.tool) {
+        case "pen":
+          if (action.points && action.points.length > 1) {
+            ctx.beginPath();
+            ctx.moveTo(action.points[0].x, action.points[0].y);
+            action.points.forEach((point) => ctx.lineTo(point.x, point.y));
+            ctx.stroke();
+          }
+          break;
 
-      case 'line':
-        if (action.startPoint && action.endPoint) {
-          ctx.beginPath();
-          ctx.moveTo(action.startPoint.x, action.startPoint.y);
-          ctx.lineTo(action.endPoint.x, action.endPoint.y);
-          ctx.stroke();
-        }
-        break;
+        case "line":
+          if (action.startPoint && action.endPoint) {
+            ctx.beginPath();
+            ctx.moveTo(action.startPoint.x, action.startPoint.y);
+            ctx.lineTo(action.endPoint.x, action.endPoint.y);
+            ctx.stroke();
+          }
+          break;
 
-      case 'arrow':
-        if (action.startPoint && action.endPoint) {
-          const { startPoint, endPoint } = action;
-          const angle = Math.atan2(endPoint.y - startPoint.y, endPoint.x - startPoint.x);
-          const headLength = 20;
+        case "arrow":
+          if (action.startPoint && action.endPoint) {
+            const { startPoint, endPoint } = action;
+            const angle = Math.atan2(
+              endPoint.y - startPoint.y,
+              endPoint.x - startPoint.x
+            );
+            const headLength = 20;
 
-          ctx.beginPath();
-          ctx.moveTo(startPoint.x, startPoint.y);
-          ctx.lineTo(endPoint.x, endPoint.y);
-          ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(startPoint.x, startPoint.y);
+            ctx.lineTo(endPoint.x, endPoint.y);
+            ctx.stroke();
 
-          ctx.beginPath();
-          ctx.moveTo(endPoint.x, endPoint.y);
-          ctx.lineTo(
-            endPoint.x - headLength * Math.cos(angle - Math.PI / 6),
-            endPoint.y - headLength * Math.sin(angle - Math.PI / 6)
-          );
-          ctx.moveTo(endPoint.x, endPoint.y);
-          ctx.lineTo(
-            endPoint.x - headLength * Math.cos(angle + Math.PI / 6),
-            endPoint.y - headLength * Math.sin(angle + Math.PI / 6)
-          );
-          ctx.stroke();
-        }
-        break;
+            ctx.beginPath();
+            ctx.moveTo(endPoint.x, endPoint.y);
+            ctx.lineTo(
+              endPoint.x - headLength * Math.cos(angle - Math.PI / 6),
+              endPoint.y - headLength * Math.sin(angle - Math.PI / 6)
+            );
+            ctx.moveTo(endPoint.x, endPoint.y);
+            ctx.lineTo(
+              endPoint.x - headLength * Math.cos(angle + Math.PI / 6),
+              endPoint.y - headLength * Math.sin(angle + Math.PI / 6)
+            );
+            ctx.stroke();
+          }
+          break;
 
-      case 'rectangle':
-        if (action.startPoint && action.endPoint) {
-          const width = action.endPoint.x - action.startPoint.x;
-          const height = action.endPoint.y - action.startPoint.y;
-          ctx.strokeRect(action.startPoint.x, action.startPoint.y, width, height);
-        }
-        break;
+        case "rectangle":
+          if (action.startPoint && action.endPoint) {
+            const width = action.endPoint.x - action.startPoint.x;
+            const height = action.endPoint.y - action.startPoint.y;
+            ctx.strokeRect(
+              action.startPoint.x,
+              action.startPoint.y,
+              width,
+              height
+            );
+          }
+          break;
 
-      case 'circle':
-        if (action.startPoint && action.endPoint) {
-          const radius = Math.sqrt(
-            Math.pow(action.endPoint.x - action.startPoint.x, 2) +
-            Math.pow(action.endPoint.y - action.startPoint.y, 2)
-          );
-          ctx.beginPath();
-          ctx.arc(action.startPoint.x, action.startPoint.y, radius, 0, Math.PI * 2);
-          ctx.stroke();
-        }
-        break;
+        case "circle":
+          if (action.startPoint && action.endPoint) {
+            const radius = Math.sqrt(
+              Math.pow(action.endPoint.x - action.startPoint.x, 2) +
+                Math.pow(action.endPoint.y - action.startPoint.y, 2)
+            );
+            ctx.beginPath();
+            ctx.arc(
+              action.startPoint.x,
+              action.startPoint.y,
+              radius,
+              0,
+              Math.PI * 2
+            );
+            ctx.stroke();
+          }
+          break;
 
-      case 'text':
-        if (action.startPoint && action.text) {
-          ctx.font = `${action.lineWidth}px Arial`;
-          ctx.fillText(action.text, action.startPoint.x, action.startPoint.y);
-        }
-        break;
-    }
-  }, []);
+        case "text":
+          if (action.startPoint && action.text) {
+            ctx.font = `${action.lineWidth}px Arial`;
+            ctx.fillText(action.text, action.startPoint.x, action.startPoint.y);
+          }
+          break;
+      }
+    },
+    []
+  );
 
   const redrawAnnotations = useCallback(() => {
     const canvas = displayCanvasRef.current;
     const baseCanvas = canvasRef.current;
     if (!canvas || !baseCanvas) return;
 
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
     // Copy base image
@@ -131,7 +148,7 @@ export default function ScreenshotTool() {
     ctx.drawImage(baseCanvas, 0, 0);
 
     // Draw all saved actions
-    actions.forEach(action => drawAction(ctx, action));
+    actions.forEach((action) => drawAction(ctx, action));
 
     // Draw current action
     if (currentAction) {
@@ -142,7 +159,7 @@ export default function ScreenshotTool() {
   useEffect(() => {
     if (screenshot && canvasRef.current) {
       const canvas = canvasRef.current;
-      const ctx = canvas.getContext('2d');
+      const ctx = canvas.getContext("2d");
       if (!ctx) return;
 
       const img = new Image();
@@ -159,31 +176,33 @@ export default function ScreenshotTool() {
   const captureScreenshot = async () => {
     try {
       const stream = await navigator.mediaDevices.getDisplayMedia({
-        video: true
+        video: true,
       });
 
-      const video = document.createElement('video');
+      const video = document.createElement("video");
       video.srcObject = stream;
       video.play();
 
       video.onloadedmetadata = () => {
-        const canvas = document.createElement('canvas');
+        const canvas = document.createElement("canvas");
         canvas.width = video.videoWidth;
         canvas.height = video.videoHeight;
 
-        const ctx = canvas.getContext('2d');
+        const ctx = canvas.getContext("2d");
         if (!ctx) return;
 
         ctx.drawImage(video, 0, 0);
-        const dataUrl = canvas.toDataURL('image/png');
+        const dataUrl = canvas.toDataURL("image/png");
         setScreenshot(dataUrl);
         setActions([]);
 
-        stream.getTracks().forEach(track => track.stop());
+        stream.getTracks().forEach((track) => track.stop());
       };
     } catch (error) {
-      console.error('Error capturing screenshot:', error);
-      alert('Screenshot capture failed. Please ensure you have granted permission.');
+      console.error("Error capturing screenshot:", error);
+      alert(
+        "Screenshot capture failed. Please ensure you have granted permission."
+      );
     }
   };
 
@@ -209,7 +228,7 @@ export default function ScreenshotTool() {
 
     return {
       x: (e.clientX - rect.left) * scaleX,
-      y: (e.clientY - rect.top) * scaleY
+      y: (e.clientY - rect.top) * scaleY,
     };
   };
 
@@ -219,18 +238,18 @@ export default function ScreenshotTool() {
     const point = getCanvasPoint(e);
     setIsDrawing(true);
 
-    if (tool === 'text') {
+    if (tool === "text") {
       setTextPosition(point);
       setShowTextInput(true);
       return;
     }
 
-    if (tool === 'pen') {
+    if (tool === "pen") {
       setCurrentAction({
         tool,
         color,
         lineWidth,
-        points: [point]
+        points: [point],
       });
     } else {
       setCurrentAction({
@@ -238,25 +257,25 @@ export default function ScreenshotTool() {
         color,
         lineWidth,
         startPoint: point,
-        endPoint: point
+        endPoint: point,
       });
     }
   };
 
   const draw = (e: React.MouseEvent<HTMLCanvasElement>) => {
-    if (!isDrawing || !currentAction || tool === 'text') return;
+    if (!isDrawing || !currentAction || tool === "text") return;
 
     const point = getCanvasPoint(e);
 
-    if (tool === 'pen') {
+    if (tool === "pen") {
       setCurrentAction({
         ...currentAction,
-        points: [...(currentAction.points || []), point]
+        points: [...(currentAction.points || []), point],
       });
     } else {
       setCurrentAction({
         ...currentAction,
-        endPoint: point
+        endPoint: point,
       });
     }
 
@@ -264,7 +283,7 @@ export default function ScreenshotTool() {
   };
 
   const stopDrawing = () => {
-    if (!isDrawing || tool === 'text') return;
+    if (!isDrawing || tool === "text") return;
 
     if (currentAction) {
       setActions([...actions, currentAction]);
@@ -280,15 +299,15 @@ export default function ScreenshotTool() {
     }
 
     const textAction: DrawAction = {
-      tool: 'text',
+      tool: "text",
       color,
       lineWidth: 24,
       startPoint: textPosition,
-      text: textInput
+      text: textInput,
     };
 
     setActions([...actions, textAction]);
-    setTextInput('');
+    setTextInput("");
     setShowTextInput(false);
   };
 
@@ -313,15 +332,22 @@ export default function ScreenshotTool() {
     const canvas = displayCanvasRef.current;
     if (!canvas) return;
 
-    const mimeType = exportFormat === 'png' ? 'image/png' : 
-                     exportFormat === 'jpg' ? 'image/jpeg' : 
-                     'image/webp';
+    const mimeType =
+      exportFormat === "png"
+        ? "image/png"
+        : exportFormat === "jpg"
+        ? "image/jpeg"
+        : "image/webp";
 
-    canvas.toBlob((blob) => {
-      if (blob) {
-        downloadFile(blob, `screenshot.${exportFormat}`);
-      }
-    }, mimeType, exportFormat === 'jpg' ? 0.9 : undefined);
+    canvas.toBlob(
+      (blob) => {
+        if (blob) {
+          downloadFile(blob, `screenshot.${exportFormat}`);
+        }
+      },
+      mimeType,
+      exportFormat === "jpg" ? 0.9 : undefined
+    );
   };
 
   const copyToClipboard = async () => {
@@ -332,12 +358,12 @@ export default function ScreenshotTool() {
       if (blob) {
         try {
           await navigator.clipboard.write([
-            new ClipboardItem({ 'image/png': blob })
+            new ClipboardItem({ "image/png": blob }),
           ]);
-          alert('Screenshot copied to clipboard!');
+          alert("Screenshot copied to clipboard!");
         } catch (error) {
-          console.error('Failed to copy:', error);
-          alert('Failed to copy to clipboard');
+          console.error("Failed to copy:", error);
+          alert("Failed to copy to clipboard");
         }
       }
     });
@@ -347,14 +373,17 @@ export default function ScreenshotTool() {
     <div className="space-y-6">
       <div className="bg-gradient-to-r from-purple-500/20 to-indigo-500/20 border border-purple-300 dark:border-purple-700 rounded-lg p-4">
         <p className="text-sm text-white font-medium">
-          <strong>📸 Screenshot Tool:</strong> Capture, annotate, and export screenshots in various formats
+          <strong>📸 Screenshot Tool:</strong> Capture, annotate, and export
+          screenshots in various formats
         </p>
       </div>
 
       <div className="grid md:grid-cols-2 gap-6">
         {/* Controls */}
         <div className="space-y-4 bg-white/50 dark:bg-slate-800/50 p-6 rounded-lg backdrop-blur-sm">
-          <h3 className="text-lg font-bold text-white mb-4">⚙️ Screenshot Controls</h3>
+          <h3 className="text-lg font-bold text-white mb-4">
+            ⚙️ Screenshot Controls
+          </h3>
 
           {/* Capture Options */}
           <div className="space-y-3">
@@ -391,49 +420,61 @@ export default function ScreenshotTool() {
                 </label>
                 <div className="grid grid-cols-3 gap-2">
                   <button
-                    onClick={() => setTool('pen')}
+                    onClick={() => setTool("pen")}
                     className={`px-3 py-2 rounded transition-colors ${
-                      tool === 'pen' ? 'bg-purple-600 text-white' : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200'
+                      tool === "pen"
+                        ? "bg-purple-600 text-white"
+                        : "bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200"
                     }`}
                   >
                     ✏️ Pen
                   </button>
                   <button
-                    onClick={() => setTool('line')}
+                    onClick={() => setTool("line")}
                     className={`px-3 py-2 rounded transition-colors ${
-                      tool === 'line' ? 'bg-purple-600 text-white' : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200'
+                      tool === "line"
+                        ? "bg-purple-600 text-white"
+                        : "bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200"
                     }`}
                   >
                     📏 Line
                   </button>
                   <button
-                    onClick={() => setTool('arrow')}
+                    onClick={() => setTool("arrow")}
                     className={`px-3 py-2 rounded transition-colors ${
-                      tool === 'arrow' ? 'bg-purple-600 text-white' : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200'
+                      tool === "arrow"
+                        ? "bg-purple-600 text-white"
+                        : "bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200"
                     }`}
                   >
                     ➡️ Arrow
                   </button>
                   <button
-                    onClick={() => setTool('rectangle')}
+                    onClick={() => setTool("rectangle")}
                     className={`px-3 py-2 rounded transition-colors ${
-                      tool === 'rectangle' ? 'bg-purple-600 text-white' : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200'
+                      tool === "rectangle"
+                        ? "bg-purple-600 text-white"
+                        : "bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200"
                     }`}
                   >
                     ⬜ Rect
                   </button>
                   <button
-                    onClick={() => setTool('circle')}
+                    onClick={() => setTool("circle")}
                     className={`px-3 py-2 rounded transition-colors ${
-                      tool === 'circle' ? 'bg-purple-600 text-white' : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200'
+                      tool === "circle"
+                        ? "bg-purple-600 text-white"
+                        : "bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200"
                     }`}
                   >
                     ⭕ Circle
                   </button>
                   <button
-                    onClick={() => setTool('text')}
+                    onClick={() => setTool("text")}
                     className={`px-3 py-2 rounded transition-colors ${
-                      tool === 'text' ? 'bg-purple-600 text-white' : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200'
+                      tool === "text"
+                        ? "bg-purple-600 text-white"
+                        : "bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200"
                     }`}
                   >
                     📝 Text
@@ -476,7 +517,9 @@ export default function ScreenshotTool() {
                 </label>
                 <select
                   value={exportFormat}
-                  onChange={(e) => setExportFormat(e.target.value as ExportFormat)}
+                  onChange={(e) =>
+                    setExportFormat(e.target.value as ExportFormat)
+                  }
                   className="w-full p-3 border rounded-lg text-gray-700 focus:ring-2 focus:ring-purple-500"
                 >
                   <option value="png">PNG (Lossless)</option>
@@ -524,14 +567,13 @@ export default function ScreenshotTool() {
 
         {/* Preview */}
         <div className="space-y-4">
-          <h3 className="text-lg font-bold text-white">👁️ Preview & Annotate</h3>
+          <h3 className="text-lg font-bold text-white">
+            👁️ Preview & Annotate
+          </h3>
 
           {screenshot ? (
             <div className="bg-white dark:bg-slate-700 p-6 rounded-lg relative">
-              <canvas
-                ref={canvasRef}
-                className="hidden"
-              />
+              <canvas ref={canvasRef} className="hidden" />
               <canvas
                 ref={displayCanvasRef}
                 width={800}
@@ -549,7 +591,7 @@ export default function ScreenshotTool() {
                     type="text"
                     value={textInput}
                     onChange={(e) => setTextInput(e.target.value)}
-                    onKeyPress={(e) => e.key === 'Enter' && addText()}
+                    onKeyPress={(e) => e.key === "Enter" && addText()}
                     placeholder="Enter text..."
                     className="w-64 p-2 border rounded text-gray-700 dark:text-white dark:bg-slate-700 mb-2"
                     autoFocus
@@ -564,7 +606,7 @@ export default function ScreenshotTool() {
                     <button
                       onClick={() => {
                         setShowTextInput(false);
-                        setTextInput('');
+                        setTextInput("");
                       }}
                       className="flex-1 px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600"
                     >

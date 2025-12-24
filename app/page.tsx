@@ -19,6 +19,7 @@ import CollageMaker from "@/components/CollageMaker";
 import PlaceholderGenerator from "@/components/PlaceholderGenerator";
 import ColorPaletteExtractor from "@/components/ColorPaletteExtractor";
 import ScreenshotTool from "@/components/ScreenshotTool";
+import IconGenerator from "@/components/IconGenerator";
 
 export default function Home() {
   const tools = [
@@ -135,6 +136,12 @@ export default function Home() {
       label: "Screenshot Tool",
       icon: "📸",
       component: <ScreenshotTool />,
+    },
+    {
+      id: "icon-generator",
+      label: "Icon Generator",
+      icon: "🎯",
+      component: <IconGenerator />,
     },
   ];
 
