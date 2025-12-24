@@ -1,0 +1,9 @@
+export interface ConversionResult {
+  success: boolean;
+  data?: any;
+  error?: string;
+}
+
+export type ImageFormat = 'png' | 'jpg' | 'jpeg' | 'webp';
+
+export type TabType = 'image-to-text' | 'text-to-image' | 'image-to-pdf' | 'pdf-to-image' | 'image-converter';

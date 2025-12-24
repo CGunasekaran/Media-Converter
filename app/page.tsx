@@ -1,65 +1,79 @@
-import Image from "next/image";
+"use client";
+
+import { useState } from "react";
+import ImageToText from "@/components/ImageToText";
+import TextToImage from "@/components/TextToImage";
+import ImageToPDF from "@/components/ImageToPDF";
+import PDFToImage from "@/components/PDFToImage";
+import ImageConverter from "@/components/ImageConverter";
+import { TabType } from "@/types";
 
 export default function Home() {
+  const [activeTab, setActiveTab] = useState<TabType>("image-to-text");
+
+  const tabs = [
+    { id: "image-to-text", label: "Image to Text", icon: "📝" },
+    { id: "text-to-image", label: "Text to Image", icon: "🖼️" },
+    { id: "image-to-pdf", label: "Image to PDF", icon: "📄" },
+    { id: "pdf-to-image", label: "PDF to Image", icon: "🖼️" },
+    { id: "image-converter", label: "Image Converter", icon: "🔄" },
+  ] as const;
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+    <main className="min-h-screen">
+      <div className="container mx-auto px-4 py-12">
+        {/* Header */}
+        <div className="text-center mb-10">
+          <h2 className="text-5xl font-extrabold bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent mb-4">
+            Choose Your Conversion Tool
+          </h2>
+          <p className="text-slate-600 dark:text-slate-300 text-lg font-medium">
+            Select a tool below to start converting your files
           </p>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+
+        {/* Tabs */}
+        <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-700">
+          <div className="flex flex-wrap border-b border-slate-200 dark:border-slate-700 bg-gradient-to-r from-slate-50 to-indigo-50 dark:from-slate-900 dark:to-indigo-950">
+            {tabs.map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`flex-1 min-w-[150px] px-6 py-4 text-sm font-semibold transition-all duration-300 ${
+                  activeTab === tab.id
+                    ? "bg-white dark:bg-slate-800 text-indigo-600 dark:text-indigo-400 border-b-4 border-indigo-600 dark:border-indigo-400 shadow-lg"
+                    : "text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-white/50 dark:hover:bg-slate-800/50"
+                }`}
+              >
+                <span className="mr-2 text-xl">{tab.icon}</span>
+                {tab.label}
+              </button>
+            ))}
+          </div>
+
+          {/* Tab Content */}
+          <div className="p-8">
+            {activeTab === "image-to-text" && <ImageToText />}
+            {activeTab === "text-to-image" && <TextToImage />}
+            {activeTab === "image-to-pdf" && <ImageToPDF />}
+            {activeTab === "pdf-to-image" && <PDFToImage />}
+            {activeTab === "image-converter" && <ImageConverter />}
+          </div>
         </div>
-      </main>
-    </div>
+
+        {/* Footer */}
+        <div className="text-center mt-10">
+          <div className="inline-flex items-center gap-2 px-6 py-3 bg-white/50 dark:bg-slate-800/50 backdrop-blur-sm rounded-full border border-slate-200 dark:border-slate-700 shadow-lg">
+            <span className="text-green-600 dark:text-green-400 text-xl">
+              🔒
+            </span>
+            <p className="text-slate-700 dark:text-slate-300 text-sm font-medium">
+              All conversions happen locally in your browser. Your files are
+              never uploaded to a server.
+            </p>
+          </div>
+        </div>
+      </div>
+    </main>
   );
 }

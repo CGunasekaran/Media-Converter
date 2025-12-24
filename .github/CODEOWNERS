@@ -1,0 +1,5 @@
+# CODEOWNERS file
+# Only the specified user can approve and merge changes to this repository
+
+# All files require approval from CGunasekaran
+* @CGunasekaran
