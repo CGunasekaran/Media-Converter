@@ -1,24 +1,24 @@
-'use client';
+"use client";
 
-import { useState, useRef, useEffect, useCallback } from 'react';
-import { downloadFile } from '@/lib/utils';
+import { useState, useRef, useEffect, useCallback } from "react";
+import { downloadFile } from "@/lib/utils";
 
 const FONTS = [
-  { value: 'Impact', label: 'Impact (Classic)' },
-  { value: 'Arial Black', label: 'Arial Black' },
-  { value: 'Comic Sans MS', label: 'Comic Sans MS' },
-  { value: 'Helvetica', label: 'Helvetica' },
-  { value: 'Times New Roman', label: 'Times New Roman' },
+  { value: "Impact", label: "Impact (Classic)" },
+  { value: "Arial Black", label: "Arial Black" },
+  { value: "Comic Sans MS", label: "Comic Sans MS" },
+  { value: "Helvetica", label: "Helvetica" },
+  { value: "Times New Roman", label: "Times New Roman" },
 ];
 
 export default function MemeGenerator() {
   const [image, setImage] = useState<string | null>(null);
-  const [topText, setTopText] = useState('');
-  const [bottomText, setBottomText] = useState('');
-  const [font, setFont] = useState('Impact');
+  const [topText, setTopText] = useState("");
+  const [bottomText, setBottomText] = useState("");
+  const [font, setFont] = useState("Impact");
   const [fontSize, setFontSize] = useState(48);
-  const [textColor, setTextColor] = useState('#FFFFFF');
-  const [strokeColor, setStrokeColor] = useState('#000000');
+  const [textColor, setTextColor] = useState("#FFFFFF");
+  const [strokeColor, setStrokeColor] = useState("#000000");
   const [strokeWidth, setStrokeWidth] = useState(2);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -28,7 +28,7 @@ export default function MemeGenerator() {
     const canvas = canvasRef.current;
     if (!canvas || !image) return;
 
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
     const img = new Image();
@@ -45,8 +45,8 @@ export default function MemeGenerator() {
       ctx.fillStyle = textColor;
       ctx.strokeStyle = strokeColor;
       ctx.lineWidth = strokeWidth;
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'top';
+      ctx.textAlign = "center";
+      ctx.textBaseline = "top";
 
       const centerX = canvas.width / 2;
       const padding = 20;
@@ -60,14 +60,23 @@ export default function MemeGenerator() {
 
       // Draw bottom text
       if (bottomText) {
-        ctx.textBaseline = 'bottom';
+        ctx.textBaseline = "bottom";
         const bottomY = canvas.height - padding;
         ctx.strokeText(bottomText.toUpperCase(), centerX, bottomY);
         ctx.fillText(bottomText.toUpperCase(), centerX, bottomY);
       }
     };
     img.src = image;
-  }, [image, topText, bottomText, font, fontSize, textColor, strokeColor, strokeWidth]);
+  }, [
+    image,
+    topText,
+    bottomText,
+    font,
+    fontSize,
+    textColor,
+    strokeColor,
+    strokeWidth,
+  ]);
 
   useEffect(() => {
     if (image) {
@@ -92,17 +101,17 @@ export default function MemeGenerator() {
 
     canvas.toBlob((blob) => {
       if (blob) {
-        downloadFile(blob, 'meme.png');
+        downloadFile(blob, "meme.png");
       }
     });
   };
 
   const resetMeme = () => {
     setImage(null);
-    setTopText('');
-    setBottomText('');
+    setTopText("");
+    setBottomText("");
     if (fileInputRef.current) {
-      fileInputRef.current.value = '';
+      fileInputRef.current.value = "";
     }
   };
 
@@ -110,14 +119,17 @@ export default function MemeGenerator() {
     <div className="space-y-6">
       <div className="bg-gradient-to-r from-pink-500/20 to-rose-500/20 border border-pink-300 dark:border-pink-700 rounded-lg p-4">
         <p className="text-sm text-white font-medium">
-          <strong>😂 Meme Generator:</strong> Create hilarious memes with custom text, fonts, and styles
+          <strong>😂 Meme Generator:</strong> Create hilarious memes with custom
+          text, fonts, and styles
         </p>
       </div>
 
       <div className="grid md:grid-cols-2 gap-6">
         {/* Controls */}
         <div className="space-y-4 bg-white/50 dark:bg-slate-800/50 p-6 rounded-lg backdrop-blur-sm">
-          <h3 className="text-lg font-bold text-white mb-4">⚙️ Meme Settings</h3>
+          <h3 className="text-lg font-bold text-white mb-4">
+            ⚙️ Meme Settings
+          </h3>
 
           {/* File Upload */}
           <div>
@@ -135,7 +147,7 @@ export default function MemeGenerator() {
               onClick={() => fileInputRef.current?.click()}
               className="w-full px-4 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors font-medium"
             >
-              {image ? '📷 Change Image' : '📁 Choose Image'}
+              {image ? "📷 Change Image" : "📁 Choose Image"}
             </button>
           </div>
 

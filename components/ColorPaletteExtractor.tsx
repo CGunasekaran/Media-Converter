@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { useState, useRef } from 'react';
-import { downloadFile } from '@/lib/utils';
+import { useState, useRef } from "react";
+import { downloadFile } from "@/lib/utils";
 
 interface ColorInfo {
   hex: string;
@@ -36,7 +36,7 @@ export default function ColorPaletteExtractor() {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
     const img = new Image();
@@ -87,7 +87,7 @@ export default function ColorPaletteExtractor() {
         .sort((a, b) => b[1] - a[1])
         .slice(0, colorCount)
         .map(([rgb, count]) => {
-          const [r, g, b] = rgb.split(',').map(Number);
+          const [r, g, b] = rgb.split(",").map(Number);
           return {
             hex: rgbToHex(r, g, b),
             rgb: `rgb(${r}, ${g}, ${b})`,
@@ -103,10 +103,15 @@ export default function ColorPaletteExtractor() {
   };
 
   const rgbToHex = (r: number, g: number, b: number): string => {
-    return '#' + [r, g, b].map(x => {
-      const hex = x.toString(16);
-      return hex.length === 1 ? '0' + hex : hex;
-    }).join('');
+    return (
+      "#" +
+      [r, g, b]
+        .map((x) => {
+          const hex = x.toString(16);
+          return hex.length === 1 ? "0" + hex : hex;
+        })
+        .join("")
+    );
   };
 
   const rgbToHsl = (r: number, g: number, b: number): string => {
@@ -116,7 +121,8 @@ export default function ColorPaletteExtractor() {
 
     const max = Math.max(r, g, b);
     const min = Math.min(r, g, b);
-    let h = 0, s = 0;
+    let h = 0,
+      s = 0;
     const l = (max + min) / 2;
 
     if (max !== min) {
@@ -124,24 +130,33 @@ export default function ColorPaletteExtractor() {
       s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
 
       switch (max) {
-        case r: h = ((g - b) / d + (g < b ? 6 : 0)) / 6; break;
-        case g: h = ((b - r) / d + 2) / 6; break;
-        case b: h = ((r - g) / d + 4) / 6; break;
+        case r:
+          h = ((g - b) / d + (g < b ? 6 : 0)) / 6;
+          break;
+        case g:
+          h = ((b - r) / d + 2) / 6;
+          break;
+        case b:
+          h = ((r - g) / d + 4) / 6;
+          break;
       }
     }
 
-    return `hsl(${Math.round(h * 360)}, ${Math.round(s * 100)}%, ${Math.round(l * 100)}%)`;
+    return `hsl(${Math.round(h * 360)}, ${Math.round(s * 100)}%, ${Math.round(
+      l * 100
+    )}%)`;
   };
 
-  const copyColor = (color: ColorInfo, format: 'hex' | 'rgb' | 'hsl') => {
-    const value = format === 'hex' ? color.hex : format === 'rgb' ? color.rgb : color.hsl;
+  const copyColor = (color: ColorInfo, format: "hex" | "rgb" | "hsl") => {
+    const value =
+      format === "hex" ? color.hex : format === "rgb" ? color.rgb : color.hsl;
     navigator.clipboard.writeText(value);
     alert(`Copied ${value} to clipboard!`);
   };
 
   const exportPalette = () => {
     const paletteData = {
-      colors: colors.map(c => ({
+      colors: colors.map((c) => ({
         hex: c.hex,
         rgb: c.rgb,
         hsl: c.hsl,
@@ -150,20 +165,23 @@ export default function ColorPaletteExtractor() {
       timestamp: new Date().toISOString(),
     };
 
-    const blob = new Blob([JSON.stringify(paletteData, null, 2)], { type: 'application/json' });
-    downloadFile(blob, 'color-palette.json');
+    const blob = new Blob([JSON.stringify(paletteData, null, 2)], {
+      type: "application/json",
+    });
+    downloadFile(blob, "color-palette.json");
   };
 
   const generateGradient = () => {
-    if (colors.length < 2) return '';
-    return `linear-gradient(90deg, ${colors.map(c => c.hex).join(', ')})`;
+    if (colors.length < 2) return "";
+    return `linear-gradient(90deg, ${colors.map((c) => c.hex).join(", ")})`;
   };
 
   return (
     <div className="space-y-6">
       <div className="bg-gradient-to-r from-fuchsia-500/20 to-pink-500/20 border border-fuchsia-300 dark:border-fuchsia-700 rounded-lg p-4">
         <p className="text-sm text-white font-medium">
-          <strong>🎨 Color Palette Extractor:</strong> Extract dominant colors from images and generate color schemes
+          <strong>🎨 Color Palette Extractor:</strong> Extract dominant colors
+          from images and generate color schemes
         </p>
       </div>
 
@@ -188,7 +206,7 @@ export default function ColorPaletteExtractor() {
               onClick={() => fileInputRef.current?.click()}
               className="w-full px-4 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors font-medium"
             >
-              {image ? '📷 Change Image' : '📁 Choose Image'}
+              {image ? "📷 Change Image" : "📁 Choose Image"}
             </button>
           </div>
 
@@ -228,7 +246,10 @@ export default function ColorPaletteExtractor() {
                     </label>
                     <div className="space-y-2">
                       {colors.map((color, i) => (
-                        <div key={i} className="bg-white dark:bg-slate-700 rounded-lg overflow-hidden">
+                        <div
+                          key={i}
+                          className="bg-white dark:bg-slate-700 rounded-lg overflow-hidden"
+                        >
                           <div
                             className="h-16"
                             style={{ backgroundColor: color.hex }}
@@ -239,7 +260,7 @@ export default function ColorPaletteExtractor() {
                                 {color.hex}
                               </span>
                               <button
-                                onClick={() => copyColor(color, 'hex')}
+                                onClick={() => copyColor(color, "hex")}
                                 className="px-2 py-1 bg-gray-200 dark:bg-gray-600 text-xs rounded hover:bg-gray-300 dark:hover:bg-gray-500"
                               >
                                 Copy HEX
@@ -247,13 +268,13 @@ export default function ColorPaletteExtractor() {
                             </div>
                             <div className="flex gap-2 text-xs text-gray-600 dark:text-gray-300">
                               <button
-                                onClick={() => copyColor(color, 'rgb')}
+                                onClick={() => copyColor(color, "rgb")}
                                 className="underline hover:text-gray-800 dark:hover:text-gray-100"
                               >
                                 {color.rgb}
                               </button>
                               <button
-                                onClick={() => copyColor(color, 'hsl')}
+                                onClick={() => copyColor(color, "hsl")}
                                 className="underline hover:text-gray-800 dark:hover:text-gray-100"
                               >
                                 {color.hsl}
@@ -277,7 +298,7 @@ export default function ColorPaletteExtractor() {
                     <button
                       onClick={() => {
                         navigator.clipboard.writeText(generateGradient());
-                        alert('Gradient CSS copied to clipboard!');
+                        alert("Gradient CSS copied to clipboard!");
                       }}
                       className="w-full mt-2 px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700 text-sm"
                     >
@@ -321,7 +342,7 @@ export default function ColorPaletteExtractor() {
         </div>
       </div>
 
-      <canvas ref={canvasRef} style={{ display: 'none' }} />
+      <canvas ref={canvasRef} style={{ display: "none" }} />
     </div>
   );
 }

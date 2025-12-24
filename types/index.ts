@@ -24,4 +24,5 @@ export type TabType =
   | "meme-generator"
   | "collage-maker"
   | "placeholder-generator"
-  | "color-palette-extractor";
+  | "color-palette-extractor"
+  | "screenshot-tool";

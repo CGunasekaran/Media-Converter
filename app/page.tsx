@@ -18,6 +18,7 @@ import MemeGenerator from "@/components/MemeGenerator";
 import CollageMaker from "@/components/CollageMaker";
 import PlaceholderGenerator from "@/components/PlaceholderGenerator";
 import ColorPaletteExtractor from "@/components/ColorPaletteExtractor";
+import ScreenshotTool from "@/components/ScreenshotTool";
 
 export default function Home() {
   const tools = [
@@ -128,6 +129,12 @@ export default function Home() {
       label: "Color Palette Extractor",
       icon: "🎨",
       component: <ColorPaletteExtractor />,
+    },
+    {
+      id: "screenshot-tool",
+      label: "Screenshot Tool",
+      icon: "📸",
+      component: <ScreenshotTool />,
     },
   ];
 

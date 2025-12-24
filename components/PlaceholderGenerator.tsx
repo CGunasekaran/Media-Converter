@@ -1,18 +1,18 @@
-'use client';
+"use client";
 
-import { useState, useRef, useEffect, useCallback } from 'react';
-import { downloadFile } from '@/lib/utils';
+import { useState, useRef, useEffect, useCallback } from "react";
+import { downloadFile } from "@/lib/utils";
 
-type PatternType = 'solid' | 'gradient' | 'dots' | 'grid' | 'diagonal';
+type PatternType = "solid" | "gradient" | "dots" | "grid" | "diagonal";
 
 export default function PlaceholderGenerator() {
   const [width, setWidth] = useState(600);
   const [height, setHeight] = useState(400);
-  const [text, setText] = useState('');
-  const [backgroundColor, setBackgroundColor] = useState('#CCCCCC');
-  const [secondaryColor, setSecondaryColor] = useState('#999999');
-  const [textColor, setTextColor] = useState('#333333');
-  const [pattern, setPattern] = useState<PatternType>('solid');
+  const [text, setText] = useState("");
+  const [backgroundColor, setBackgroundColor] = useState("#CCCCCC");
+  const [secondaryColor, setSecondaryColor] = useState("#999999");
+  const [textColor, setTextColor] = useState("#333333");
+  const [pattern, setPattern] = useState<PatternType>("solid");
   const [fontSize, setFontSize] = useState(32);
   const [showDimensions, setShowDimensions] = useState(true);
 
@@ -22,7 +22,7 @@ export default function PlaceholderGenerator() {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
     canvas.width = width;
@@ -30,18 +30,18 @@ export default function PlaceholderGenerator() {
 
     // Draw background pattern
     switch (pattern) {
-      case 'solid':
+      case "solid":
         ctx.fillStyle = backgroundColor;
         ctx.fillRect(0, 0, width, height);
         break;
-      case 'gradient':
+      case "gradient":
         const gradient = ctx.createLinearGradient(0, 0, width, height);
         gradient.addColorStop(0, backgroundColor);
         gradient.addColorStop(1, secondaryColor);
         ctx.fillStyle = gradient;
         ctx.fillRect(0, 0, width, height);
         break;
-      case 'dots':
+      case "dots":
         ctx.fillStyle = backgroundColor;
         ctx.fillRect(0, 0, width, height);
         ctx.fillStyle = secondaryColor;
@@ -53,7 +53,7 @@ export default function PlaceholderGenerator() {
           }
         }
         break;
-      case 'grid':
+      case "grid":
         ctx.fillStyle = backgroundColor;
         ctx.fillRect(0, 0, width, height);
         ctx.strokeStyle = secondaryColor;
@@ -71,7 +71,7 @@ export default function PlaceholderGenerator() {
           ctx.stroke();
         }
         break;
-      case 'diagonal':
+      case "diagonal":
         ctx.fillStyle = backgroundColor;
         ctx.fillRect(0, 0, width, height);
         ctx.strokeStyle = secondaryColor;
@@ -87,8 +87,8 @@ export default function PlaceholderGenerator() {
 
     // Draw text
     ctx.fillStyle = textColor;
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
 
     const centerX = width / 2;
     const centerY = height / 2;
@@ -107,7 +107,17 @@ export default function PlaceholderGenerator() {
       const yOffset = text ? fontSize * 0.8 : 0;
       ctx.fillText(dimText, centerX, centerY + yOffset);
     }
-  }, [width, height, text, backgroundColor, secondaryColor, textColor, pattern, fontSize, showDimensions]);
+  }, [
+    width,
+    height,
+    text,
+    backgroundColor,
+    secondaryColor,
+    textColor,
+    pattern,
+    fontSize,
+    showDimensions,
+  ]);
 
   useEffect(() => {
     drawPlaceholder();
@@ -130,23 +140,24 @@ export default function PlaceholderGenerator() {
 
     const dataURL = canvas.toDataURL();
     navigator.clipboard.writeText(dataURL);
-    alert('Data URL copied to clipboard!');
+    alert("Data URL copied to clipboard!");
   };
 
   const presets = [
-    { name: 'Banner', width: 1200, height: 300 },
-    { name: 'Square', width: 600, height: 600 },
-    { name: 'Portrait', width: 400, height: 600 },
-    { name: 'Landscape', width: 800, height: 450 },
-    { name: 'Instagram', width: 1080, height: 1080 },
-    { name: 'Facebook', width: 1200, height: 630 },
+    { name: "Banner", width: 1200, height: 300 },
+    { name: "Square", width: 600, height: 600 },
+    { name: "Portrait", width: 400, height: 600 },
+    { name: "Landscape", width: 800, height: 450 },
+    { name: "Instagram", width: 1080, height: 1080 },
+    { name: "Facebook", width: 1200, height: 630 },
   ];
 
   return (
     <div className="space-y-6">
       <div className="bg-gradient-to-r from-teal-500/20 to-cyan-500/20 border border-teal-300 dark:border-teal-700 rounded-lg p-4">
         <p className="text-sm text-white font-medium">
-          <strong>🖼️ Placeholder Generator:</strong> Create custom placeholder images with text, colors, and patterns
+          <strong>🖼️ Placeholder Generator:</strong> Create custom placeholder
+          images with text, colors, and patterns
         </p>
       </div>
 
@@ -268,7 +279,7 @@ export default function PlaceholderGenerator() {
               />
             </div>
 
-            {pattern !== 'solid' && (
+            {pattern !== "solid" && (
               <div>
                 <label className="block text-sm font-medium text-white mb-2">
                   Pattern Color
@@ -334,7 +345,7 @@ export default function PlaceholderGenerator() {
             <canvas
               ref={canvasRef}
               className="w-full border border-gray-300 dark:border-gray-600 rounded"
-              style={{ maxHeight: '600px', objectFit: 'contain' }}
+              style={{ maxHeight: "600px", objectFit: "contain" }}
             />
           </div>
         </div>
