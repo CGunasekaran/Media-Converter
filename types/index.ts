@@ -26,4 +26,6 @@ export type TabType =
   | "placeholder-generator"
   | "color-palette-extractor"
   | "screenshot-tool"
-  | "icon-generator";
+  | "icon-generator"
+  | "image-optimizer"
+  | "base64-tool";

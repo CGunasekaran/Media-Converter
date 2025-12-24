@@ -20,6 +20,8 @@ import PlaceholderGenerator from "@/components/PlaceholderGenerator";
 import ColorPaletteExtractor from "@/components/ColorPaletteExtractor";
 import ScreenshotTool from "@/components/ScreenshotTool";
 import IconGenerator from "@/components/IconGenerator";
+import ImageOptimizer from "@/components/ImageOptimizer";
+import Base64Tool from "@/components/Base64Tool";
 
 export default function Home() {
   const tools = [
@@ -142,6 +144,18 @@ export default function Home() {
       label: "Icon Generator",
       icon: "🎯",
       component: <IconGenerator />,
+    },
+    {
+      id: "image-optimizer",
+      label: "Image Optimizer for Web",
+      icon: "🚀",
+      component: <ImageOptimizer />,
+    },
+    {
+      id: "base64-tool",
+      label: "Base64 Encoder/Decoder",
+      icon: "🔐",
+      component: <Base64Tool />,
     },
   ];
 

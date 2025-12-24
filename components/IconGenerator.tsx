@@ -1,53 +1,155 @@
-'use client';
+"use client";
 
-import { useState, useRef } from 'react';
-import { downloadFile } from '@/lib/utils';
+import { useState, useRef } from "react";
+import { downloadFile } from "@/lib/utils";
 
 interface IconSize {
   name: string;
   size: number;
-  platform: 'favicon' | 'ios' | 'android' | 'pwa';
+  platform: "favicon" | "ios" | "android" | "pwa";
   filename: string;
 }
 
 const ICON_SIZES: IconSize[] = [
   // Favicons
-  { name: 'Favicon 16x16', size: 16, platform: 'favicon', filename: 'favicon-16x16.png' },
-  { name: 'Favicon 32x32', size: 32, platform: 'favicon', filename: 'favicon-32x32.png' },
-  { name: 'Favicon 48x48', size: 48, platform: 'favicon', filename: 'favicon-48x48.png' },
-  { name: 'Favicon 64x64', size: 64, platform: 'favicon', filename: 'favicon-64x64.png' },
-  
+  {
+    name: "Favicon 16x16",
+    size: 16,
+    platform: "favicon",
+    filename: "favicon-16x16.png",
+  },
+  {
+    name: "Favicon 32x32",
+    size: 32,
+    platform: "favicon",
+    filename: "favicon-32x32.png",
+  },
+  {
+    name: "Favicon 48x48",
+    size: 48,
+    platform: "favicon",
+    filename: "favicon-48x48.png",
+  },
+  {
+    name: "Favicon 64x64",
+    size: 64,
+    platform: "favicon",
+    filename: "favicon-64x64.png",
+  },
+
   // iOS App Icons
-  { name: 'iOS 180x180 (iPhone)', size: 180, platform: 'ios', filename: 'apple-touch-icon-180x180.png' },
-  { name: 'iOS 167x167 (iPad Pro)', size: 167, platform: 'ios', filename: 'apple-touch-icon-167x167.png' },
-  { name: 'iOS 152x152 (iPad)', size: 152, platform: 'ios', filename: 'apple-touch-icon-152x152.png' },
-  { name: 'iOS 120x120 (iPhone)', size: 120, platform: 'ios', filename: 'apple-touch-icon-120x120.png' },
-  { name: 'iOS 87x87 (iPhone)', size: 87, platform: 'ios', filename: 'apple-touch-icon-87x87.png' },
-  { name: 'iOS 80x80 (iPhone)', size: 80, platform: 'ios', filename: 'apple-touch-icon-80x80.png' },
-  { name: 'iOS 76x76 (iPad)', size: 76, platform: 'ios', filename: 'apple-touch-icon-76x76.png' },
-  { name: 'iOS 60x60', size: 60, platform: 'ios', filename: 'apple-touch-icon-60x60.png' },
-  
+  {
+    name: "iOS 180x180 (iPhone)",
+    size: 180,
+    platform: "ios",
+    filename: "apple-touch-icon-180x180.png",
+  },
+  {
+    name: "iOS 167x167 (iPad Pro)",
+    size: 167,
+    platform: "ios",
+    filename: "apple-touch-icon-167x167.png",
+  },
+  {
+    name: "iOS 152x152 (iPad)",
+    size: 152,
+    platform: "ios",
+    filename: "apple-touch-icon-152x152.png",
+  },
+  {
+    name: "iOS 120x120 (iPhone)",
+    size: 120,
+    platform: "ios",
+    filename: "apple-touch-icon-120x120.png",
+  },
+  {
+    name: "iOS 87x87 (iPhone)",
+    size: 87,
+    platform: "ios",
+    filename: "apple-touch-icon-87x87.png",
+  },
+  {
+    name: "iOS 80x80 (iPhone)",
+    size: 80,
+    platform: "ios",
+    filename: "apple-touch-icon-80x80.png",
+  },
+  {
+    name: "iOS 76x76 (iPad)",
+    size: 76,
+    platform: "ios",
+    filename: "apple-touch-icon-76x76.png",
+  },
+  {
+    name: "iOS 60x60",
+    size: 60,
+    platform: "ios",
+    filename: "apple-touch-icon-60x60.png",
+  },
+
   // Android App Icons
-  { name: 'Android 512x512', size: 512, platform: 'android', filename: 'android-chrome-512x512.png' },
-  { name: 'Android 192x192', size: 192, platform: 'android', filename: 'android-chrome-192x192.png' },
-  { name: 'Android 144x144', size: 144, platform: 'android', filename: 'android-chrome-144x144.png' },
-  { name: 'Android 96x96', size: 96, platform: 'android', filename: 'android-chrome-96x96.png' },
-  { name: 'Android 72x72', size: 72, platform: 'android', filename: 'android-chrome-72x72.png' },
-  { name: 'Android 48x48', size: 48, platform: 'android', filename: 'android-chrome-48x48.png' },
-  
+  {
+    name: "Android 512x512",
+    size: 512,
+    platform: "android",
+    filename: "android-chrome-512x512.png",
+  },
+  {
+    name: "Android 192x192",
+    size: 192,
+    platform: "android",
+    filename: "android-chrome-192x192.png",
+  },
+  {
+    name: "Android 144x144",
+    size: 144,
+    platform: "android",
+    filename: "android-chrome-144x144.png",
+  },
+  {
+    name: "Android 96x96",
+    size: 96,
+    platform: "android",
+    filename: "android-chrome-96x96.png",
+  },
+  {
+    name: "Android 72x72",
+    size: 72,
+    platform: "android",
+    filename: "android-chrome-72x72.png",
+  },
+  {
+    name: "Android 48x48",
+    size: 48,
+    platform: "android",
+    filename: "android-chrome-48x48.png",
+  },
+
   // PWA
-  { name: 'PWA 512x512', size: 512, platform: 'pwa', filename: 'pwa-512x512.png' },
-  { name: 'PWA 192x192', size: 192, platform: 'pwa', filename: 'pwa-192x192.png' },
+  {
+    name: "PWA 512x512",
+    size: 512,
+    platform: "pwa",
+    filename: "pwa-512x512.png",
+  },
+  {
+    name: "PWA 192x192",
+    size: 192,
+    platform: "pwa",
+    filename: "pwa-192x192.png",
+  },
 ];
 
-type Platform = 'all' | 'favicon' | 'ios' | 'android' | 'pwa';
+type Platform = "all" | "favicon" | "ios" | "android" | "pwa";
 
 export default function IconGenerator() {
   const [sourceImage, setSourceImage] = useState<string | null>(null);
-  const [selectedPlatform, setSelectedPlatform] = useState<Platform>('all');
-  const [generatedIcons, setGeneratedIcons] = useState<{ [key: string]: string }>({});
+  const [selectedPlatform, setSelectedPlatform] = useState<Platform>("all");
+  const [generatedIcons, setGeneratedIcons] = useState<{
+    [key: string]: string;
+  }>({});
   const [isGenerating, setIsGenerating] = useState(false);
-  const [backgroundColor, setBackgroundColor] = useState('#FFFFFF');
+  const [backgroundColor, setBackgroundColor] = useState("#FFFFFF");
   const [padding, setPadding] = useState(0);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -64,15 +166,18 @@ export default function IconGenerator() {
     reader.readAsDataURL(file);
   };
 
-  const generateIcon = (img: HTMLImageElement, size: number): Promise<string> => {
+  const generateIcon = (
+    img: HTMLImageElement,
+    size: number
+  ): Promise<string> => {
     return new Promise((resolve) => {
-      const canvas = document.createElement('canvas');
+      const canvas = document.createElement("canvas");
       canvas.width = size;
       canvas.height = size;
-      const ctx = canvas.getContext('2d');
-      
+      const ctx = canvas.getContext("2d");
+
       if (!ctx) {
-        resolve('');
+        resolve("");
         return;
       }
 
@@ -82,7 +187,7 @@ export default function IconGenerator() {
 
       // Calculate dimensions with padding
       const paddingPx = (size * padding) / 100;
-      const drawSize = size - (paddingPx * 2);
+      const drawSize = size - paddingPx * 2;
 
       // Calculate source dimensions to maintain aspect ratio
       const sourceRatio = img.width / img.height;
@@ -104,11 +209,17 @@ export default function IconGenerator() {
       // Draw image centered with padding
       ctx.drawImage(
         img,
-        sourceX, sourceY, sourceWidth, sourceHeight,
-        paddingPx, paddingPx, drawSize, drawSize
+        sourceX,
+        sourceY,
+        sourceWidth,
+        sourceHeight,
+        paddingPx,
+        paddingPx,
+        drawSize,
+        drawSize
       );
 
-      resolve(canvas.toDataURL('image/png'));
+      resolve(canvas.toDataURL("image/png"));
     });
   };
 
@@ -121,10 +232,11 @@ export default function IconGenerator() {
 
     img.onload = async () => {
       const icons: { [key: string]: string } = {};
-      
-      const sizesToGenerate = selectedPlatform === 'all' 
-        ? ICON_SIZES 
-        : ICON_SIZES.filter(icon => icon.platform === selectedPlatform);
+
+      const sizesToGenerate =
+        selectedPlatform === "all"
+          ? ICON_SIZES
+          : ICON_SIZES.filter((icon) => icon.platform === selectedPlatform);
 
       for (const iconSize of sizesToGenerate) {
         const dataUrl = await generateIcon(img, iconSize.size);
@@ -152,8 +264,8 @@ export default function IconGenerator() {
   };
 
   const dataURLtoBlob = (dataUrl: string): Blob => {
-    const arr = dataUrl.split(',');
-    const mime = arr[0].match(/:(.*?);/)?.[1] || 'image/png';
+    const arr = dataUrl.split(",");
+    const mime = arr[0].match(/:(.*?);/)?.[1] || "image/png";
     const bstr = atob(arr[1]);
     let n = bstr.length;
     const u8arr = new Uint8Array(n);
@@ -180,37 +292,38 @@ export default function IconGenerator() {
 <link rel="manifest" href="/site.webmanifest">`;
 
     navigator.clipboard.writeText(html);
-    alert('HTML code copied to clipboard!');
+    alert("HTML code copied to clipboard!");
   };
 
   const copyManifestJSON = () => {
     const manifest = {
-      name: 'Your App Name',
-      short_name: 'App',
+      name: "Your App Name",
+      short_name: "App",
       icons: [
         {
-          src: '/android-chrome-192x192.png',
-          sizes: '192x192',
-          type: 'image/png'
+          src: "/android-chrome-192x192.png",
+          sizes: "192x192",
+          type: "image/png",
         },
         {
-          src: '/android-chrome-512x512.png',
-          sizes: '512x512',
-          type: 'image/png'
-        }
+          src: "/android-chrome-512x512.png",
+          sizes: "512x512",
+          type: "image/png",
+        },
       ],
-      theme_color: '#ffffff',
-      background_color: '#ffffff',
-      display: 'standalone'
+      theme_color: "#ffffff",
+      background_color: "#ffffff",
+      display: "standalone",
     };
 
     navigator.clipboard.writeText(JSON.stringify(manifest, null, 2));
-    alert('Manifest JSON copied to clipboard!');
+    alert("Manifest JSON copied to clipboard!");
   };
 
-  const filteredIconSizes = selectedPlatform === 'all' 
-    ? ICON_SIZES 
-    : ICON_SIZES.filter(icon => icon.platform === selectedPlatform);
+  const filteredIconSizes =
+    selectedPlatform === "all"
+      ? ICON_SIZES
+      : ICON_SIZES.filter((icon) => icon.platform === selectedPlatform);
 
   const generatedCount = Object.keys(generatedIcons).length;
 
@@ -218,14 +331,17 @@ export default function IconGenerator() {
     <div className="space-y-6">
       <div className="bg-gradient-to-r from-blue-500/20 to-cyan-500/20 border border-blue-300 dark:border-blue-700 rounded-lg p-4">
         <p className="text-sm text-white font-medium">
-          <strong>🎯 Icon Generator:</strong> Generate favicon sets and app icons for iOS/Android in multiple sizes automatically
+          <strong>🎯 Icon Generator:</strong> Generate favicon sets and app
+          icons for iOS/Android in multiple sizes automatically
         </p>
       </div>
 
       <div className="grid md:grid-cols-2 gap-6">
         {/* Controls */}
         <div className="space-y-4 bg-white/50 dark:bg-slate-800/50 p-6 rounded-lg backdrop-blur-sm">
-          <h3 className="text-lg font-bold text-white mb-4">⚙️ Icon Settings</h3>
+          <h3 className="text-lg font-bold text-white mb-4">
+            ⚙️ Icon Settings
+          </h3>
 
           {/* File Upload */}
           <div>
@@ -243,7 +359,7 @@ export default function IconGenerator() {
               onClick={() => fileInputRef.current?.click()}
               className="w-full px-4 py-3 bg-gradient-to-r from-blue-600 to-cyan-600 text-white rounded-lg hover:from-blue-700 hover:to-cyan-700 transition-colors font-medium shadow-lg"
             >
-              {sourceImage ? '📁 Change Image' : '📁 Choose Image'}
+              {sourceImage ? "📁 Change Image" : "📁 Choose Image"}
             </button>
             <p className="text-xs text-gray-400 dark:text-gray-500 mt-2">
               Recommended: Square image (1024x1024px or larger)
@@ -259,10 +375,14 @@ export default function IconGenerator() {
                 </label>
                 <select
                   value={selectedPlatform}
-                  onChange={(e) => setSelectedPlatform(e.target.value as Platform)}
+                  onChange={(e) =>
+                    setSelectedPlatform(e.target.value as Platform)
+                  }
                   className="w-full p-3 border rounded-lg text-gray-700 focus:ring-2 focus:ring-blue-500"
                 >
-                  <option value="all">All Platforms ({ICON_SIZES.length} icons)</option>
+                  <option value="all">
+                    All Platforms ({ICON_SIZES.length} icons)
+                  </option>
                   <option value="favicon">Favicons Only (4 icons)</option>
                   <option value="ios">iOS Only (8 icons)</option>
                   <option value="android">Android Only (6 icons)</option>
@@ -316,7 +436,9 @@ export default function IconGenerator() {
                 disabled={isGenerating}
                 className="w-full px-6 py-3 bg-gradient-to-r from-blue-600 to-cyan-600 text-white rounded-lg hover:from-blue-700 hover:to-cyan-700 transition-colors font-medium shadow-lg disabled:opacity-50"
               >
-                {isGenerating ? '⏳ Generating...' : `🎨 Generate ${filteredIconSizes.length} Icons`}
+                {isGenerating
+                  ? "⏳ Generating..."
+                  : `🎨 Generate ${filteredIconSizes.length} Icons`}
               </button>
 
               {generatedCount > 0 && (
@@ -325,7 +447,7 @@ export default function IconGenerator() {
                     <p className="text-sm text-white mb-3">
                       ✅ Generated {generatedCount} icons
                     </p>
-                    
+
                     <div className="space-y-2">
                       <button
                         onClick={downloadAll}
@@ -333,7 +455,7 @@ export default function IconGenerator() {
                       >
                         💾 Download All Icons
                       </button>
-                      
+
                       <div className="grid grid-cols-2 gap-2">
                         <button
                           onClick={copyHTMLCode}
@@ -358,7 +480,9 @@ export default function IconGenerator() {
 
         {/* Preview */}
         <div className="space-y-4">
-          <h3 className="text-lg font-bold text-white">👁️ Preview & Download</h3>
+          <h3 className="text-lg font-bold text-white">
+            👁️ Preview & Download
+          </h3>
 
           {sourceImage ? (
             <div className="space-y-4">
@@ -369,9 +493,9 @@ export default function IconGenerator() {
                 </p>
                 <div className="flex justify-center">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img 
-                    src={sourceImage} 
-                    alt="Source" 
+                  <img
+                    src={sourceImage}
+                    alt="Source"
                     className="max-w-[200px] max-h-[200px] border border-gray-300 dark:border-gray-600 rounded"
                   />
                 </div>
@@ -389,7 +513,7 @@ export default function IconGenerator() {
                       if (!dataUrl) return null;
 
                       return (
-                        <div 
+                        <div
                           key={iconSize.filename}
                           className="flex items-center gap-3 p-3 bg-gray-50 dark:bg-slate-800 rounded-lg"
                         >
@@ -398,7 +522,10 @@ export default function IconGenerator() {
                             src={dataUrl}
                             alt={iconSize.name}
                             className="border border-gray-300 dark:border-gray-600"
-                            style={{ width: Math.min(iconSize.size, 64), height: Math.min(iconSize.size, 64) }}
+                            style={{
+                              width: Math.min(iconSize.size, 64),
+                              height: Math.min(iconSize.size, 64),
+                            }}
                           />
                           <div className="flex-1 min-w-0">
                             <p className="text-sm font-medium text-gray-700 dark:text-gray-200">
@@ -409,7 +536,9 @@ export default function IconGenerator() {
                             </p>
                           </div>
                           <button
-                            onClick={() => downloadIcon(iconSize.filename, dataUrl)}
+                            onClick={() =>
+                              downloadIcon(iconSize.filename, dataUrl)
+                            }
                             className="px-3 py-1.5 bg-blue-600 text-white rounded hover:bg-blue-700 text-xs font-medium whitespace-nowrap"
                           >
                             💾 Download
@@ -437,10 +566,14 @@ export default function IconGenerator() {
       {/* Platform Information */}
       {sourceImage && (
         <div className="bg-white/50 dark:bg-slate-800/50 p-6 rounded-lg backdrop-blur-sm">
-          <h3 className="text-lg font-bold text-white mb-4">📱 Platform Icon Sizes</h3>
+          <h3 className="text-lg font-bold text-white mb-4">
+            📱 Platform Icon Sizes
+          </h3>
           <div className="grid md:grid-cols-4 gap-4">
             <div className="space-y-2">
-              <h4 className="font-semibold text-blue-600 dark:text-blue-400">🌐 Favicons</h4>
+              <h4 className="font-semibold text-blue-600 dark:text-blue-400">
+                🌐 Favicons
+              </h4>
               <ul className="text-xs text-gray-700 dark:text-gray-300 space-y-1">
                 <li>• 16x16 - Browser tab</li>
                 <li>• 32x32 - Taskbar</li>
@@ -449,7 +582,9 @@ export default function IconGenerator() {
               </ul>
             </div>
             <div className="space-y-2">
-              <h4 className="font-semibold text-blue-600 dark:text-blue-400">🍎 iOS</h4>
+              <h4 className="font-semibold text-blue-600 dark:text-blue-400">
+                🍎 iOS
+              </h4>
               <ul className="text-xs text-gray-700 dark:text-gray-300 space-y-1">
                 <li>• 180x180 - iPhone home screen</li>
                 <li>• 167x167 - iPad Pro</li>
@@ -458,7 +593,9 @@ export default function IconGenerator() {
               </ul>
             </div>
             <div className="space-y-2">
-              <h4 className="font-semibold text-blue-600 dark:text-blue-400">🤖 Android</h4>
+              <h4 className="font-semibold text-blue-600 dark:text-blue-400">
+                🤖 Android
+              </h4>
               <ul className="text-xs text-gray-700 dark:text-gray-300 space-y-1">
                 <li>• 512x512 - Play Store</li>
                 <li>• 192x192 - Home screen</li>
@@ -467,7 +604,9 @@ export default function IconGenerator() {
               </ul>
             </div>
             <div className="space-y-2">
-              <h4 className="font-semibold text-blue-600 dark:text-blue-400">📲 PWA</h4>
+              <h4 className="font-semibold text-blue-600 dark:text-blue-400">
+                📲 PWA
+              </h4>
               <ul className="text-xs text-gray-700 dark:text-gray-300 space-y-1">
                 <li>• 512x512 - Splash screen</li>
                 <li>• 192x192 - App icon</li>
