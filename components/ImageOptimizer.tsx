@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { useState, useRef } from 'react';
-import { downloadFile } from '@/lib/utils';
+import { useState, useRef } from "react";
+import { downloadFile } from "@/lib/utils";
 
 interface OptimizedImage {
   format: string;
@@ -24,7 +24,9 @@ export default function ImageOptimizer() {
   const [optimizedImages, setOptimizedImages] = useState<OptimizedImage[]>([]);
   const [responsiveSets, setResponsiveSets] = useState<ResponsiveSet[]>([]);
   const [quality, setQuality] = useState(85);
-  const [targetFormat, setTargetFormat] = useState<'webp' | 'jpg' | 'png'>('webp');
+  const [targetFormat, setTargetFormat] = useState<"webp" | "jpg" | "png">(
+    "webp"
+  );
   const [isProcessing, setIsProcessing] = useState(false);
   const [generateResponsive, setGenerateResponsive] = useState(false);
 
@@ -38,7 +40,7 @@ export default function ImageOptimizer() {
     if (!file) return;
 
     setOriginalSize(file.size);
-    
+
     const reader = new FileReader();
     reader.onload = (event) => {
       setSourceImage(event.target?.result as string);
@@ -53,12 +55,17 @@ export default function ImageOptimizer() {
     format: string,
     quality: number,
     targetWidth?: number
-  ): Promise<{ dataUrl: string; size: number; width: number; height: number }> => {
+  ): Promise<{
+    dataUrl: string;
+    size: number;
+    width: number;
+    height: number;
+  }> => {
     return new Promise((resolve) => {
-      const canvas = canvasRef.current || document.createElement('canvas');
-      const ctx = canvas.getContext('2d');
+      const canvas = canvasRef.current || document.createElement("canvas");
+      const ctx = canvas.getContext("2d");
       if (!ctx) {
-        resolve({ dataUrl: '', size: 0, width: 0, height: 0 });
+        resolve({ dataUrl: "", size: 0, width: 0, height: 0 });
         return;
       }
 
@@ -71,14 +78,17 @@ export default function ImageOptimizer() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.drawImage(img, 0, 0, width, height);
 
-      const mimeType = format === 'webp' ? 'image/webp' : 
-                       format === 'jpg' ? 'image/jpeg' : 
-                       'image/png';
+      const mimeType =
+        format === "webp"
+          ? "image/webp"
+          : format === "jpg"
+          ? "image/jpeg"
+          : "image/png";
 
       const dataUrl = canvas.toDataURL(mimeType, quality / 100);
-      
+
       // Calculate approximate size
-      const base64Length = dataUrl.split(',')[1].length;
+      const base64Length = dataUrl.split(",")[1].length;
       const size = Math.round((base64Length * 3) / 4);
 
       resolve({ dataUrl, size, width, height });
@@ -96,37 +106,37 @@ export default function ImageOptimizer() {
       const optimized: OptimizedImage[] = [];
 
       // Generate WebP
-      const webp = await optimizeImage(img, 'webp', quality);
+      const webp = await optimizeImage(img, "webp", quality);
       optimized.push({
-        format: 'webp',
+        format: "webp",
         size: webp.size,
         width: webp.width,
         height: webp.height,
         dataUrl: webp.dataUrl,
-        quality
+        quality,
       });
 
       // Generate fallback JPG
-      const jpg = await optimizeImage(img, 'jpg', quality);
+      const jpg = await optimizeImage(img, "jpg", quality);
       optimized.push({
-        format: 'jpg',
+        format: "jpg",
         size: jpg.size,
         width: jpg.width,
         height: jpg.height,
         dataUrl: jpg.dataUrl,
-        quality
+        quality,
       });
 
       // Generate fallback PNG if selected format is PNG
-      if (targetFormat === 'png') {
-        const png = await optimizeImage(img, 'png', 100);
+      if (targetFormat === "png") {
+        const png = await optimizeImage(img, "png", 100);
         optimized.push({
-          format: 'png',
+          format: "png",
           size: png.size,
           width: png.width,
           height: png.height,
           dataUrl: png.dataUrl,
-          quality: 100
+          quality: 100,
         });
       }
 
@@ -135,18 +145,23 @@ export default function ImageOptimizer() {
       // Generate responsive sets if enabled
       if (generateResponsive) {
         const responsive: ResponsiveSet[] = [];
-        
+
         for (const width of responsiveWidths) {
           if (width < img.width) {
-            const result = await optimizeImage(img, targetFormat, quality, width);
+            const result = await optimizeImage(
+              img,
+              targetFormat,
+              quality,
+              width
+            );
             responsive.push({
               width,
               dataUrl: result.dataUrl,
-              size: result.size
+              size: result.size,
             });
           }
         }
-        
+
         setResponsiveSets(responsive);
       }
 
@@ -165,8 +180,8 @@ export default function ImageOptimizer() {
   };
 
   const dataURLtoBlob = (dataUrl: string): Blob => {
-    const arr = dataUrl.split(',');
-    const mime = arr[0].match(/:(.*?);/)?.[1] || 'image/png';
+    const arr = dataUrl.split(",");
+    const mime = arr[0].match(/:(.*?);/)?.[1] || "image/png";
     const bstr = atob(arr[1]);
     let n = bstr.length;
     const u8arr = new Uint8Array(n);
@@ -177,11 +192,11 @@ export default function ImageOptimizer() {
   };
 
   const formatBytes = (bytes: number): string => {
-    if (bytes === 0) return '0 Bytes';
+    if (bytes === 0) return "0 Bytes";
     const k = 1024;
-    const sizes = ['Bytes', 'KB', 'MB'];
+    const sizes = ["Bytes", "KB", "MB"];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return Math.round((bytes / Math.pow(k, i)) * 100) / 100 + ' ' + sizes[i];
+    return Math.round((bytes / Math.pow(k, i)) * 100) / 100 + " " + sizes[i];
   };
 
   const getSavingsPercent = (original: number, optimized: number): number => {
@@ -189,9 +204,9 @@ export default function ImageOptimizer() {
   };
 
   const copyPictureElement = () => {
-    const webpImage = optimizedImages.find(img => img.format === 'webp');
-    const fallbackImage = optimizedImages.find(img => img.format === 'jpg');
-    
+    const webpImage = optimizedImages.find((img) => img.format === "webp");
+    const fallbackImage = optimizedImages.find((img) => img.format === "jpg");
+
     if (!webpImage || !fallbackImage) return;
 
     const html = `<picture>
@@ -201,15 +216,15 @@ export default function ImageOptimizer() {
 </picture>`;
 
     navigator.clipboard.writeText(html);
-    alert('HTML picture element copied to clipboard!');
+    alert("HTML picture element copied to clipboard!");
   };
 
   const copyResponsiveSrcset = () => {
     if (responsiveSets.length === 0) return;
 
     const srcset = responsiveSets
-      .map(item => `image-${item.width}w.${targetFormat} ${item.width}w`)
-      .join(',\n  ');
+      .map((item) => `image-${item.width}w.${targetFormat} ${item.width}w`)
+      .join(",\n  ");
 
     const html = `<img
   srcset="${srcset}"
@@ -221,23 +236,26 @@ export default function ImageOptimizer() {
   loading="lazy">`;
 
     navigator.clipboard.writeText(html);
-    alert('Responsive srcset HTML copied to clipboard!');
+    alert("Responsive srcset HTML copied to clipboard!");
   };
 
   return (
     <div className="space-y-6">
       <canvas ref={canvasRef} className="hidden" />
-      
+
       <div className="bg-gradient-to-r from-green-500/20 to-emerald-500/20 border border-green-300 dark:border-green-700 rounded-lg p-4">
         <p className="text-sm text-white font-medium">
-          <strong>🚀 Image Optimizer:</strong> Optimize images for web, generate responsive sets, and convert to WebP with fallbacks
+          <strong>🚀 Image Optimizer:</strong> Optimize images for web, generate
+          responsive sets, and convert to WebP with fallbacks
         </p>
       </div>
 
       <div className="grid md:grid-cols-2 gap-6">
         {/* Controls */}
         <div className="space-y-4 bg-white/50 dark:bg-slate-800/50 p-6 rounded-lg backdrop-blur-sm">
-          <h3 className="text-lg font-bold text-white mb-4">⚙️ Optimization Settings</h3>
+          <h3 className="text-lg font-bold text-white mb-4">
+            ⚙️ Optimization Settings
+          </h3>
 
           {/* File Upload */}
           <div>
@@ -255,7 +273,7 @@ export default function ImageOptimizer() {
               onClick={() => fileInputRef.current?.click()}
               className="w-full px-4 py-3 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-lg hover:from-green-700 hover:to-emerald-700 transition-colors font-medium shadow-lg"
             >
-              {sourceImage ? '📁 Change Image' : '📁 Choose Image'}
+              {sourceImage ? "📁 Change Image" : "📁 Choose Image"}
             </button>
             {originalSize > 0 && (
               <p className="text-xs text-gray-400 dark:text-gray-300 mt-2">
@@ -291,7 +309,9 @@ export default function ImageOptimizer() {
                 </label>
                 <select
                   value={targetFormat}
-                  onChange={(e) => setTargetFormat(e.target.value as 'webp' | 'jpg' | 'png')}
+                  onChange={(e) =>
+                    setTargetFormat(e.target.value as "webp" | "jpg" | "png")
+                  }
                   className="w-full p-3 border rounded-lg text-gray-700 focus:ring-2 focus:ring-green-500"
                 >
                   <option value="webp">WebP (Best compression)</option>
@@ -309,8 +329,12 @@ export default function ImageOptimizer() {
                   onChange={(e) => setGenerateResponsive(e.target.checked)}
                   className="w-4 h-4"
                 />
-                <label htmlFor="responsive" className="text-sm text-white cursor-pointer">
-                  Generate responsive image sets (320w, 640w, 768w, 1024w, 1280w, 1920w)
+                <label
+                  htmlFor="responsive"
+                  className="text-sm text-white cursor-pointer"
+                >
+                  Generate responsive image sets (320w, 640w, 768w, 1024w,
+                  1280w, 1920w)
                 </label>
               </div>
 
@@ -320,7 +344,7 @@ export default function ImageOptimizer() {
                 disabled={isProcessing}
                 className="w-full px-6 py-3 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-lg hover:from-green-700 hover:to-emerald-700 transition-colors font-medium shadow-lg disabled:opacity-50"
               >
-                {isProcessing ? '⏳ Processing...' : '🚀 Optimize Image'}
+                {isProcessing ? "⏳ Processing..." : "🚀 Optimize Image"}
               </button>
 
               {/* Results */}
@@ -365,7 +389,7 @@ export default function ImageOptimizer() {
                   </p>
                   <div className="space-y-3">
                     {optimizedImages.map((img, index) => (
-                      <div 
+                      <div
                         key={index}
                         className="p-3 bg-gray-50 dark:bg-slate-800 rounded-lg"
                       >
@@ -391,7 +415,8 @@ export default function ImageOptimizer() {
                           </span>
                           {originalSize > 0 && (
                             <span className="text-green-600 dark:text-green-400 font-semibold">
-                              ({getSavingsPercent(originalSize, img.size)}% smaller)
+                              ({getSavingsPercent(originalSize, img.size)}%
+                              smaller)
                             </span>
                           )}
                         </div>
@@ -409,7 +434,7 @@ export default function ImageOptimizer() {
                   </p>
                   <div className="space-y-2">
                     {responsiveSets.map((item, index) => (
-                      <div 
+                      <div
                         key={index}
                         className="flex items-center justify-between p-2 bg-gray-50 dark:bg-slate-800 rounded"
                       >
@@ -448,10 +473,14 @@ export default function ImageOptimizer() {
 
       {/* Information */}
       <div className="bg-white/50 dark:bg-slate-800/50 p-6 rounded-lg backdrop-blur-sm">
-        <h3 className="text-lg font-bold text-white mb-4">💡 Optimization Tips</h3>
+        <h3 className="text-lg font-bold text-white mb-4">
+          💡 Optimization Tips
+        </h3>
         <div className="grid md:grid-cols-3 gap-4 text-sm">
           <div>
-            <h4 className="font-semibold text-green-600 dark:text-green-400 mb-2">🎯 WebP Format</h4>
+            <h4 className="font-semibold text-green-600 dark:text-green-400 mb-2">
+              🎯 WebP Format
+            </h4>
             <ul className="text-gray-700 dark:text-gray-300 space-y-1 text-xs">
               <li>• 25-35% smaller than JPG</li>
               <li>• Supports transparency</li>
@@ -460,7 +489,9 @@ export default function ImageOptimizer() {
             </ul>
           </div>
           <div>
-            <h4 className="font-semibold text-green-600 dark:text-green-400 mb-2">📱 Responsive Images</h4>
+            <h4 className="font-semibold text-green-600 dark:text-green-400 mb-2">
+              📱 Responsive Images
+            </h4>
             <ul className="text-gray-700 dark:text-gray-300 space-y-1 text-xs">
               <li>• Serve right size per device</li>
               <li>• Reduces bandwidth usage</li>
@@ -469,7 +500,9 @@ export default function ImageOptimizer() {
             </ul>
           </div>
           <div>
-            <h4 className="font-semibold text-green-600 dark:text-green-400 mb-2">🔄 Fallbacks</h4>
+            <h4 className="font-semibold text-green-600 dark:text-green-400 mb-2">
+              🔄 Fallbacks
+            </h4>
             <ul className="text-gray-700 dark:text-gray-300 space-y-1 text-xs">
               <li>• Use &lt;picture&gt; element</li>
               <li>• JPG fallback for old browsers</li>

@@ -406,7 +406,7 @@ export default function IconGenerator() {
                     type="text"
                     value={backgroundColor}
                     onChange={(e) => setBackgroundColor(e.target.value)}
-                    className="flex-1 p-2 border rounded text-gray-700"
+                    className="flex-1 p-2 border rounded text-white dark:text-white bg-gray-800 dark:bg-gray-800"
                     placeholder="#FFFFFF"
                   />
                 </div>

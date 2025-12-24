@@ -197,7 +197,7 @@ export default function BarcodeTools() {
               <select
                 value={format}
                 onChange={(e) => setFormat(e.target.value)}
-                className="w-full p-3 border rounded-lg text-gray-700 focus:ring-2 focus:ring-blue-500"
+                className="w-full p-3 border rounded-lg text-white dark:text-white bg-gray-800 dark:bg-gray-800 focus:ring-2 focus:ring-blue-500"
               >
                 {BARCODE_FORMATS.map((fmt) => (
                   <option key={fmt.value} value={fmt.value}>
@@ -216,7 +216,7 @@ export default function BarcodeTools() {
                 value={text}
                 onChange={(e) => setText(e.target.value)}
                 placeholder="e.g., 1234567890"
-                className="w-full p-3 border rounded-lg text-gray-700 focus:ring-2 focus:ring-blue-500"
+                className="w-full p-3 border rounded-lg text-white dark:text-white bg-gray-800 dark:bg-gray-800 focus:ring-2 focus:ring-blue-500"
               />
               <p className="text-xs text-gray-300 mt-1">
                 {format === "EAN13" && "Enter 12 or 13 digits"}

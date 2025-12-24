@@ -270,7 +270,7 @@ export default function CollageMaker() {
             <select
               value={layout}
               onChange={(e) => setLayout(e.target.value as LayoutType)}
-              className="w-full p-3 border rounded-lg text-gray-700 focus:ring-2 focus:ring-violet-500"
+              className="w-full p-3 border rounded-lg text-white dark:text-white bg-gray-800 dark:bg-gray-800 focus:ring-2 focus:ring-violet-500"
             >
               {LAYOUTS.map((l) => (
                 <option key={l.value} value={l.value}>

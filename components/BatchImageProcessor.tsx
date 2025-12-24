@@ -227,7 +227,7 @@ export default function BatchImageProcessor() {
                     type="number"
                     value={targetWidth}
                     onChange={(e) => setTargetWidth(Number(e.target.value))}
-                    className="w-full p-2 border rounded text-gray-700"
+                    className="w-full p-2 border rounded text-white dark:text-white bg-gray-800 dark:bg-gray-800"
                   />
                 </div>
                 <div>
@@ -238,7 +238,7 @@ export default function BatchImageProcessor() {
                     type="number"
                     value={targetHeight}
                     onChange={(e) => setTargetHeight(Number(e.target.value))}
-                    className="w-full p-2 border rounded text-gray-700"
+                    className="w-full p-2 border rounded text-white dark:text-white bg-gray-800 dark:bg-gray-800"
                   />
                 </div>
               </div>
@@ -262,7 +262,7 @@ export default function BatchImageProcessor() {
               <select
                 value={filter}
                 onChange={(e) => setFilter(e.target.value)}
-                className="w-full p-2 border rounded text-gray-700"
+                className="w-full p-2 border rounded text-white dark:text-white bg-gray-800 dark:bg-gray-800"
               >
                 <option value="grayscale">Grayscale</option>
                 <option value="sepia">Sepia</option>
@@ -280,7 +280,7 @@ export default function BatchImageProcessor() {
               <select
                 value={targetFormat}
                 onChange={(e) => setTargetFormat(e.target.value)}
-                className="w-full p-2 border rounded text-gray-700"
+                className="w-full p-2 border rounded text-white dark:text-white bg-gray-800 dark:bg-gray-800"
               >
                 <option value="png">PNG</option>
                 <option value="jpeg">JPEG</option>
@@ -299,7 +299,7 @@ export default function BatchImageProcessor() {
                 value={renamePrefix}
                 onChange={(e) => setRenamePrefix(e.target.value)}
                 placeholder="image"
-                className="w-full p-2 border rounded text-gray-700"
+                className="w-full p-2 border rounded text-white dark:text-white bg-gray-800 dark:bg-gray-800"
               />
               <p className="text-sm text-white mt-1">
                 Files will be named: {renamePrefix}_1, {renamePrefix}_2, etc.

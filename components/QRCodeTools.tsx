@@ -152,7 +152,7 @@ export default function QRCodeTools() {
                 value={text}
                 onChange={(e) => setText(e.target.value)}
                 placeholder="https://example.com or any text..."
-                className="w-full h-24 p-3 border rounded-lg text-gray-700 focus:ring-2 focus:ring-indigo-500"
+                className="w-full h-24 p-3 border rounded-lg text-white dark:text-white bg-gray-800 dark:bg-gray-800 focus:ring-2 focus:ring-indigo-500"
               />
             </div>
 

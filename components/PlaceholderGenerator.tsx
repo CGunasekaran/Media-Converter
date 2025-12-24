@@ -199,7 +199,7 @@ export default function PlaceholderGenerator() {
                 max="2000"
                 value={width}
                 onChange={(e) => setWidth(Number(e.target.value))}
-                className="w-full p-2 border rounded-lg text-gray-700"
+                className="w-full p-2 border rounded-lg text-white dark:text-white bg-gray-800 dark:bg-gray-800"
               />
             </div>
             <div>
@@ -212,7 +212,7 @@ export default function PlaceholderGenerator() {
                 max="2000"
                 value={height}
                 onChange={(e) => setHeight(Number(e.target.value))}
-                className="w-full p-2 border rounded-lg text-gray-700"
+                className="w-full p-2 border rounded-lg text-white dark:text-white bg-gray-800 dark:bg-gray-800"
               />
             </div>
           </div>
@@ -255,7 +255,7 @@ export default function PlaceholderGenerator() {
             <select
               value={pattern}
               onChange={(e) => setPattern(e.target.value as PatternType)}
-              className="w-full p-3 border rounded-lg text-gray-700"
+              className="w-full p-3 border rounded-lg text-white dark:text-white bg-gray-800 dark:bg-gray-800"
             >
               <option value="solid">Solid Color</option>
               <option value="gradient">Gradient</option>

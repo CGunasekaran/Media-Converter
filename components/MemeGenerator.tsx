@@ -188,7 +188,7 @@ export default function MemeGenerator() {
                 <select
                   value={font}
                   onChange={(e) => setFont(e.target.value)}
-                  className="w-full p-3 border rounded-lg text-gray-700 focus:ring-2 focus:ring-pink-500"
+                  className="w-full p-3 border rounded-lg text-white dark:text-white bg-gray-800 dark:bg-gray-800 focus:ring-2 focus:ring-pink-500"
                 >
                   {FONTS.map((f) => (
                     <option key={f.value} value={f.value}>

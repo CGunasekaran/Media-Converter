@@ -593,7 +593,7 @@ export default function ScreenshotTool() {
                     onChange={(e) => setTextInput(e.target.value)}
                     onKeyPress={(e) => e.key === "Enter" && addText()}
                     placeholder="Enter text..."
-                    className="w-64 p-2 border rounded text-gray-700 dark:text-white dark:bg-slate-700 mb-2"
+                    className="w-64 p-2 border rounded text-white dark:text-white bg-gray-800 dark:bg-slate-700 mb-2"
                     autoFocus
                   />
                   <div className="flex gap-2">

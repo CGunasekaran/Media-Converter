@@ -262,7 +262,7 @@ export default function ImageEditor() {
                 value={watermarkText}
                 onChange={(e) => setWatermarkText(e.target.value)}
                 placeholder="Enter watermark text"
-                className="w-full p-2 border rounded text-gray-700"
+                className="w-full p-2 border rounded text-white dark:text-white bg-gray-800 dark:bg-gray-800"
               />
             </div>
 

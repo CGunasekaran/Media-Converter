@@ -228,7 +228,7 @@ export default function SVGConverter() {
                     step="50"
                     value={width}
                     onChange={(e) => setWidth(Number(e.target.value))}
-                    className="w-full p-2 border rounded-lg text-gray-700"
+                    className="w-full p-2 border rounded-lg text-white dark:text-white bg-gray-800 dark:bg-gray-800"
                   />
                 </div>
                 <div>
@@ -242,7 +242,7 @@ export default function SVGConverter() {
                     step="50"
                     value={height}
                     onChange={(e) => setHeight(Number(e.target.value))}
-                    className="w-full p-2 border rounded-lg text-gray-700"
+                    className="w-full p-2 border rounded-lg text-white dark:text-white bg-gray-800 dark:bg-gray-800"
                   />
                 </div>
               </div>
