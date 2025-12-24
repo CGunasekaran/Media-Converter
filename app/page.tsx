@@ -6,6 +6,9 @@ import TextToImage from "@/components/TextToImage";
 import ImageToPDF from "@/components/ImageToPDF";
 import PDFToImage from "@/components/PDFToImage";
 import ImageConverter from "@/components/ImageConverter";
+import ImageEditor from "@/components/ImageEditor";
+import BatchImageProcessor from "@/components/BatchImageProcessor";
+import BackgroundRemover from "@/components/BackgroundRemover";
 import { TabType } from "@/types";
 
 export default function Home() {
@@ -17,6 +20,9 @@ export default function Home() {
     { id: "image-to-pdf", label: "Image to PDF", icon: "📄" },
     { id: "pdf-to-image", label: "PDF to Image", icon: "🖼️" },
     { id: "image-converter", label: "Image Converter", icon: "🔄" },
+    { id: "image-editor", label: "Image Editor", icon: "✨" },
+    { id: "batch-processor", label: "Batch Processing", icon: "📦" },
+    { id: "background-remover", label: "Background Remover", icon: "🎨" },
   ] as const;
 
   return (
@@ -58,6 +64,9 @@ export default function Home() {
             {activeTab === "image-to-pdf" && <ImageToPDF />}
             {activeTab === "pdf-to-image" && <PDFToImage />}
             {activeTab === "image-converter" && <ImageConverter />}
+            {activeTab === "image-editor" && <ImageEditor />}
+            {activeTab === "batch-processor" && <BatchImageProcessor />}
+            {activeTab === "background-remover" && <BackgroundRemover />}
           </div>
         </div>
 

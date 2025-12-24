@@ -1,36 +1,130 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🎨 Media Converter Suite
 
-## Getting Started
+A comprehensive, modern media conversion application built with Next.js 15, featuring a beautiful gradient UI and powerful image processing capabilities.
 
-First, run the development server:
+## ✨ Features
+
+### 📝 **Basic Conversions**
+- **Image to Text (OCR)** - Extract text from images using Tesseract.js
+- **Text to Image** - Generate images from text with customizable styling
+- **Image to PDF** - Convert multiple images into a single PDF document
+- **PDF to Image** - Extract pages from PDF files as images
+- **Image Format Converter** - Convert between PNG, JPG, WebP, AVIF, and TIFF
+
+### 🎨 **Advanced Image Editing**
+- **Image Editor** - Professional image editing with:
+  - ⚡ Rotate images (0-360°)
+  - ↔️ Flip horizontally/vertically
+  - 🎨 Apply filters (grayscale, sepia, invert)
+  - ☀️ Adjust brightness and contrast
+  - 🌫️ Apply blur effects
+  - 💧 Add text watermarks
+  - 🗜️ Compress images with quality control
+
+### 📦 **Batch Processing**
+- **Bulk Resize** - Resize multiple images at once with aspect ratio control
+- **Bulk Filter** - Apply the same filter to multiple images
+- **Format Conversion** - Convert multiple images to different formats
+- **Bulk Rename** - Rename files with custom prefixes
+
+### 🖼️ **Background Removal**
+- Remove backgrounds from images automatically
+- Replace with solid colors
+- Replace with custom background images
+- Transparent background export
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- Node.js 18+ installed
+- npm, yarn, pnpm, or bun package manager
+
+### Installation
 
 ```bash
+# Clone the repository
+git clone https://github.com/CGunasekaran/Media-Converter.git
+cd Media-Converter
+
+# Install dependencies
+npm install
+
+# Run the development server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) to see the application.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🛠️ Technologies Used
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- **Next.js 15** - React framework with App Router
+- **TypeScript** - Type-safe development
+- **Tailwind CSS** - Modern, utility-first styling
+- **Sharp** - High-performance image processing
+- **jsPDF** - PDF generation
+- **Tesseract.js** - OCR for text extraction
+- **pdfjs-dist** - PDF parsing and rendering
+- **@imgly/background-removal** - AI-powered background removal
+- **Canvas (node-canvas)** - Server-side canvas rendering
 
-## Learn More
+## 📁 Project Structure
 
-To learn more about Next.js, take a look at the following resources:
+```
+media-converter/
+├── app/
+│   ├── api/              # API routes for server-side processing
+│   │   ├── convert-image/
+│   │   ├── image-to-pdf/
+│   │   ├── image-to-text/
+│   │   ├── pdf-to-image/
+│   │   ├── text-to-image/
+│   │   └── remove-background/
+│   ├── layout.tsx        # Root layout with header/footer
+│   ├── page.tsx          # Main page with tab navigation
+│   └── globals.css       # Global styles
+├── components/           # React components
+│   ├── BackgroundRemover.tsx
+│   ├── BatchImageProcessor.tsx
+│   ├── ImageConverter.tsx
+│   ├── ImageEditor.tsx
+│   ├── ImageToPDF.tsx
+│   ├── ImageToText.tsx
+│   ├── PDFToImage.tsx
+│   └── TextToImage.tsx
+├── lib/
+│   └── utils.ts          # Utility functions
+└── types/
+    └── index.ts          # TypeScript type definitions
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🎨 Design Features
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- **Modern Gradient UI** - Indigo, purple, and pink gradient themes
+- **Dark Mode Support** - Automatic dark mode detection
+- **Responsive Design** - Works on all device sizes
+- **Glass-morphism Effects** - Modern, translucent UI elements
+- **Smooth Animations** - Polished transitions and hover effects
 
-## Deploy on Vercel
+## 🔒 Privacy & Security
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+All file processing happens **locally in your browser** or on the server without storing files. Your data is never permanently saved or shared.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 👨‍💻 Developer
+
+Created by [Gunasekaran](https://gunasekaran-portfolio.vercel.app/)
+
+## 📄 License
+
+This project is open source and available under the MIT License.
+
+## 🤝 Contributing
+
+Contributions, issues, and feature requests are welcome!
+
+## 🌐 Deploy on Vercel
+
+The easiest way to deploy this app is using the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme).
+
+Check out the [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
