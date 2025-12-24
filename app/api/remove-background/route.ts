@@ -1,17 +1,17 @@
-import { NextRequest, NextResponse } from 'next/server';
-import sharp from 'sharp';
-import { removeBackground } from '@imgly/background-removal';
+import { NextRequest, NextResponse } from "next/server";
+import sharp from "sharp";
+import { removeBackground } from "@imgly/background-removal";
 
 export async function POST(request: NextRequest) {
   try {
     const formData = await request.formData();
-    const file = formData.get('file') as File;
-    const replaceWithColor = formData.get('replaceWithColor') === 'true';
-    const bgColor = formData.get('bgColor') as string || '#ffffff';
-    const backgroundImage = formData.get('backgroundImage') as File | null;
+    const file = formData.get("file") as File;
+    const replaceWithColor = formData.get("replaceWithColor") === "true";
+    const bgColor = (formData.get("bgColor") as string) || "#ffffff";
+    const backgroundImage = formData.get("backgroundImage") as File | null;
 
     if (!file) {
-      return NextResponse.json({ error: 'No file provided' }, { status: 400 });
+      return NextResponse.json({ error: "No file provided" }, { status: 400 });
     }
 
     const bytes = await file.arrayBuffer();
@@ -20,7 +20,7 @@ export async function POST(request: NextRequest) {
     // Remove background using @imgly/background-removal
     const blob = new Blob([buffer]);
     const result = await removeBackground(blob);
-    
+
     // Convert result to buffer
     const resultArrayBuffer = await result.arrayBuffer();
     const processedBuffer = Buffer.from(resultArrayBuffer);
@@ -49,11 +49,11 @@ export async function POST(request: NextRequest) {
           .composite([{ input: processedBuffer }])
           .png()
           .toBuffer();
-        
+
         return new NextResponse(new Uint8Array(compositedBuffer), {
           headers: {
-            'Content-Type': 'image/png',
-            'Content-Disposition': 'attachment; filename="no-background.png"',
+            "Content-Type": "image/png",
+            "Content-Disposition": 'attachment; filename="no-background.png"',
           },
         });
       } else if (backgroundImage) {
@@ -63,7 +63,7 @@ export async function POST(request: NextRequest) {
 
         // Resize background to match foreground
         const resizedBg = await sharp(bgBuffer)
-          .resize(width, height, { fit: 'cover' })
+          .resize(width, height, { fit: "cover" })
           .toBuffer();
 
         // Composite foreground over background
@@ -71,11 +71,11 @@ export async function POST(request: NextRequest) {
           .composite([{ input: processedBuffer }])
           .png()
           .toBuffer();
-        
+
         return new NextResponse(new Uint8Array(compositedBuffer), {
           headers: {
-            'Content-Type': 'image/png',
-            'Content-Disposition': 'attachment; filename="no-background.png"',
+            "Content-Type": "image/png",
+            "Content-Disposition": 'attachment; filename="no-background.png"',
           },
         });
       }
@@ -83,14 +83,14 @@ export async function POST(request: NextRequest) {
 
     return new NextResponse(new Uint8Array(processedBuffer), {
       headers: {
-        'Content-Type': 'image/png',
-        'Content-Disposition': 'attachment; filename="no-background.png"',
+        "Content-Type": "image/png",
+        "Content-Disposition": 'attachment; filename="no-background.png"',
       },
     });
   } catch (error) {
-    console.error('Background removal error:', error);
+    console.error("Background removal error:", error);
     return NextResponse.json(
-      { error: 'Failed to remove background' },
+      { error: "Failed to remove background" },
       { status: 500 }
     );
   }

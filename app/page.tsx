@@ -9,6 +9,8 @@ import ImageConverter from "@/components/ImageConverter";
 import ImageEditor from "@/components/ImageEditor";
 import BatchImageProcessor from "@/components/BatchImageProcessor";
 import BackgroundRemover from "@/components/BackgroundRemover";
+import PDFTools from "@/components/PDFTools";
+import DocumentScanner from "@/components/DocumentScanner";
 import { TabType } from "@/types";
 
 export default function Home() {
@@ -23,6 +25,8 @@ export default function Home() {
     { id: "image-editor", label: "Image Editor", icon: "✨" },
     { id: "batch-processor", label: "Batch Processing", icon: "📦" },
     { id: "background-remover", label: "Background Remover", icon: "🎨" },
+    { id: "pdf-tools", label: "PDF Tools", icon: "🛠️" },
+    { id: "document-scanner", label: "Document Scanner", icon: "📸" },
   ] as const;
 
   return (
@@ -67,6 +71,8 @@ export default function Home() {
             {activeTab === "image-editor" && <ImageEditor />}
             {activeTab === "batch-processor" && <BatchImageProcessor />}
             {activeTab === "background-remover" && <BackgroundRemover />}
+            {activeTab === "pdf-tools" && <PDFTools />}
+            {activeTab === "document-scanner" && <DocumentScanner />}
           </div>
         </div>
 

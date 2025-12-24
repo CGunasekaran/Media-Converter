@@ -33,6 +33,21 @@ A comprehensive, modern media conversion application built with Next.js 15, feat
 - Replace with custom background images
 - Transparent background export
 
+### 📄 **PDF Tools**
+- **Merge PDFs** - Combine multiple PDF files into one document
+- **Split PDF** - Extract specific pages or split by page ranges (e.g., 1-3,5,7-10)
+- **Rotate Pages** - Rotate all pages by 90°, 180°, or 270°
+- **Add Page Numbers** - Add page numbers to all pages with customizable position
+- **Compress PDF** - Reduce PDF file size by removing metadata
+- **Extract Text** - Extract all text content from PDFs
+
+### 📸 **Document Scanner**
+- **Camera Scanning** - Use device camera to scan documents
+- **Auto-Enhancement** - Automatic contrast and sharpness adjustment
+- **Document Sizing** - Resize scans to A4 dimensions at 300 DPI
+- **Convert to PDF** - Convert scanned documents directly to PDF
+- **Save as Image** - Download scanned documents as JPEG images
+
 ## 🚀 Getting Started
 
 ### Prerequisites
@@ -63,6 +78,7 @@ Open [http://localhost:3000](http://localhost:3000) to see the application.
 - **Tailwind CSS** - Modern, utility-first styling
 - **Sharp** - High-performance image processing
 - **jsPDF** - PDF generation
+- **pdf-lib** - PDF manipulation and editing
 - **Tesseract.js** - OCR for text extraction
 - **pdfjs-dist** - PDF parsing and rendering
 - **@imgly/background-removal** - AI-powered background removal
@@ -79,18 +95,22 @@ media-converter/
 │   │   ├── image-to-text/
 │   │   ├── pdf-to-image/
 │   │   ├── text-to-image/
-│   │   └── remove-background/
+│   │   ├── remove-background/
+│   │   ├── pdf-tools/
+│   │   └── scan-document/
 │   ├── layout.tsx        # Root layout with header/footer
 │   ├── page.tsx          # Main page with tab navigation
 │   └── globals.css       # Global styles
 ├── components/           # React components
 │   ├── BackgroundRemover.tsx
 │   ├── BatchImageProcessor.tsx
+│   ├── DocumentScanner.tsx
 │   ├── ImageConverter.tsx
 │   ├── ImageEditor.tsx
 │   ├── ImageToPDF.tsx
 │   ├── ImageToText.tsx
 │   ├── PDFToImage.tsx
+│   ├── PDFTools.tsx
 │   └── TextToImage.tsx
 ├── lib/
 │   └── utils.ts          # Utility functions

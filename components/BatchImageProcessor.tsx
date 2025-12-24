@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import { useState, useRef } from 'react';
-import { downloadFile } from '@/lib/utils';
+import { useState, useRef } from "react";
+import { downloadFile } from "@/lib/utils";
 
-type BatchOperation = 'resize' | 'filter' | 'convert' | 'rename';
+type BatchOperation = "resize" | "filter" | "convert" | "rename";
 
 interface ProcessedFile {
   name: string;
@@ -13,18 +13,18 @@ interface ProcessedFile {
 
 export default function BatchImageProcessor() {
   const [files, setFiles] = useState<File[]>([]);
-  const [operation, setOperation] = useState<BatchOperation>('resize');
+  const [operation, setOperation] = useState<BatchOperation>("resize");
   const [loading, setLoading] = useState(false);
   const [processedFiles, setProcessedFiles] = useState<ProcessedFile[]>([]);
-  
+
   // Operation settings
   const [targetWidth, setTargetWidth] = useState(800);
   const [targetHeight, setTargetHeight] = useState(600);
   const [maintainAspect, setMaintainAspect] = useState(true);
-  const [filter, setFilter] = useState('grayscale');
-  const [targetFormat, setTargetFormat] = useState('png');
-  const [renamePrefix, setRenamePrefix] = useState('image');
-  
+  const [filter, setFilter] = useState("grayscale");
+  const [targetFormat, setTargetFormat] = useState("png");
+  const [renamePrefix, setRenamePrefix] = useState("image");
+
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -35,7 +35,7 @@ export default function BatchImageProcessor() {
 
   const processImages = async () => {
     if (files.length === 0) {
-      alert('Please select images first');
+      alert("Please select images first");
       return;
     }
 
@@ -47,19 +47,22 @@ export default function BatchImageProcessor() {
 
       for (let i = 0; i < files.length; i++) {
         const file = files[i];
-        const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d');
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
         if (!ctx) continue;
 
         const img = await loadImage(file);
 
-        if (operation === 'resize') {
+        if (operation === "resize") {
           // Resize logic
           let width = targetWidth;
           let height = targetHeight;
 
           if (maintainAspect) {
-            const ratio = Math.min(targetWidth / img.width, targetHeight / img.height);
+            const ratio = Math.min(
+              targetWidth / img.width,
+              targetHeight / img.height
+            );
             width = img.width * ratio;
             height = img.height * ratio;
           }
@@ -68,38 +71,38 @@ export default function BatchImageProcessor() {
           canvas.height = height;
           ctx.drawImage(img, 0, 0, width, height);
 
-          const blob = await canvasToBlob(canvas, 'image/png');
-          const newName = `${file.name.split('.')[0]}_resized.png`;
+          const blob = await canvasToBlob(canvas, "image/png");
+          const newName = `${file.name.split(".")[0]}_resized.png`;
           processed.push({
             name: newName,
             blob,
             url: URL.createObjectURL(blob),
           });
-        } else if (operation === 'filter') {
+        } else if (operation === "filter") {
           // Apply filter
           canvas.width = img.width;
           canvas.height = img.height;
 
-          if (filter === 'grayscale') {
-            ctx.filter = 'grayscale(100%)';
-          } else if (filter === 'sepia') {
-            ctx.filter = 'sepia(100%)';
-          } else if (filter === 'blur') {
-            ctx.filter = 'blur(5px)';
-          } else if (filter === 'brightness') {
-            ctx.filter = 'brightness(150%)';
+          if (filter === "grayscale") {
+            ctx.filter = "grayscale(100%)";
+          } else if (filter === "sepia") {
+            ctx.filter = "sepia(100%)";
+          } else if (filter === "blur") {
+            ctx.filter = "blur(5px)";
+          } else if (filter === "brightness") {
+            ctx.filter = "brightness(150%)";
           }
 
           ctx.drawImage(img, 0, 0);
 
-          const blob = await canvasToBlob(canvas, 'image/png');
-          const newName = `${file.name.split('.')[0]}_${filter}.png`;
+          const blob = await canvasToBlob(canvas, "image/png");
+          const newName = `${file.name.split(".")[0]}_${filter}.png`;
           processed.push({
             name: newName,
             blob,
             url: URL.createObjectURL(blob),
           });
-        } else if (operation === 'convert') {
+        } else if (operation === "convert") {
           // Convert format
           canvas.width = img.width;
           canvas.height = img.height;
@@ -107,15 +110,15 @@ export default function BatchImageProcessor() {
 
           const mimeType = `image/${targetFormat}`;
           const blob = await canvasToBlob(canvas, mimeType);
-          const newName = `${file.name.split('.')[0]}.${targetFormat}`;
+          const newName = `${file.name.split(".")[0]}.${targetFormat}`;
           processed.push({
             name: newName,
             blob,
             url: URL.createObjectURL(blob),
           });
-        } else if (operation === 'rename') {
+        } else if (operation === "rename") {
           // Rename files
-          const extension = file.name.split('.').pop();
+          const extension = file.name.split(".").pop();
           const newName = `${renamePrefix}_${i + 1}.${extension}`;
           processed.push({
             name: newName,
@@ -128,9 +131,9 @@ export default function BatchImageProcessor() {
       setProcessedFiles(processed);
       setLoading(false);
     } catch (error) {
-      console.error('Error processing images:', error);
+      console.error("Error processing images:", error);
       setLoading(false);
-      alert('Error processing images');
+      alert("Error processing images");
     }
   };
 
@@ -143,12 +146,15 @@ export default function BatchImageProcessor() {
     });
   };
 
-  const canvasToBlob = (canvas: HTMLCanvasElement, type: string): Promise<Blob> => {
+  const canvasToBlob = (
+    canvas: HTMLCanvasElement,
+    type: string
+  ): Promise<Blob> => {
     return new Promise((resolve, reject) => {
       canvas.toBlob(
         (blob) => {
           if (blob) resolve(blob);
-          else reject(new Error('Failed to create blob'));
+          else reject(new Error("Failed to create blob"));
         },
         type,
         0.9
@@ -169,7 +175,9 @@ export default function BatchImageProcessor() {
   return (
     <div className="space-y-6">
       <div className="bg-white/50 dark:bg-slate-800/50 p-6 rounded-lg backdrop-blur-sm">
-        <h3 className="text-lg font-bold text-white mb-4">📦 Batch Processing</h3>
+        <h3 className="text-lg font-bold text-white mb-4">
+          📦 Batch Processing
+        </h3>
 
         {/* File Selection */}
         <div className="mb-4">
@@ -208,7 +216,7 @@ export default function BatchImageProcessor() {
 
         {/* Operation Settings */}
         <div className="space-y-4 mb-4">
-          {operation === 'resize' && (
+          {operation === "resize" && (
             <div className="space-y-3">
               <div className="grid grid-cols-2 gap-4">
                 <div>
@@ -246,7 +254,7 @@ export default function BatchImageProcessor() {
             </div>
           )}
 
-          {operation === 'filter' && (
+          {operation === "filter" && (
             <div>
               <label className="block text-sm font-medium text-white mb-2">
                 Select Filter
@@ -264,7 +272,7 @@ export default function BatchImageProcessor() {
             </div>
           )}
 
-          {operation === 'convert' && (
+          {operation === "convert" && (
             <div>
               <label className="block text-sm font-medium text-white mb-2">
                 Target Format
@@ -281,7 +289,7 @@ export default function BatchImageProcessor() {
             </div>
           )}
 
-          {operation === 'rename' && (
+          {operation === "rename" && (
             <div>
               <label className="block text-sm font-medium text-white mb-2">
                 Name Prefix
@@ -306,7 +314,7 @@ export default function BatchImageProcessor() {
           disabled={loading || files.length === 0}
           className="w-full px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium disabled:opacity-50"
         >
-          {loading ? '⏳ Processing...' : '🚀 Process All Images'}
+          {loading ? "⏳ Processing..." : "🚀 Process All Images"}
         </button>
       </div>
 
@@ -314,7 +322,9 @@ export default function BatchImageProcessor() {
       {processedFiles.length > 0 && (
         <div className="bg-white/50 dark:bg-slate-800/50 p-6 rounded-lg backdrop-blur-sm">
           <div className="flex justify-between items-center mb-4">
-            <h3 className="text-lg font-bold text-white">✅ Processed Images ({processedFiles.length})</h3>
+            <h3 className="text-lg font-bold text-white">
+              ✅ Processed Images ({processedFiles.length})
+            </h3>
             <button
               onClick={downloadAll}
               className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors font-medium"
