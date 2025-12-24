@@ -1,18 +1,18 @@
-'use client';
+"use client";
 
-import { useState, useRef } from 'react';
-import { downloadFile } from '@/lib/utils';
+import { useState, useRef } from "react";
+import { downloadFile } from "@/lib/utils";
 
-type ConversionFormat = 'png' | 'jpg';
+type ConversionFormat = "png" | "jpg";
 
 export default function SVGConverter() {
   const [svgFile, setSvgFile] = useState<File | null>(null);
-  const [svgContent, setSvgContent] = useState<string>('');
-  const [format, setFormat] = useState<ConversionFormat>('png');
+  const [svgContent, setSvgContent] = useState<string>("");
+  const [format, setFormat] = useState<ConversionFormat>("png");
   const [width, setWidth] = useState(800);
   const [height, setHeight] = useState(600);
   const [maintainAspectRatio, setMaintainAspectRatio] = useState(true);
-  const [backgroundColor, setBackgroundColor] = useState('#ffffff');
+  const [backgroundColor, setBackgroundColor] = useState("#ffffff");
   const [transparent, setTransparent] = useState(false);
   const [loading, setLoading] = useState(false);
   const [convertedImage, setConvertedImage] = useState<string | null>(null);
@@ -24,8 +24,8 @@ export default function SVGConverter() {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    if (!file.type.includes('svg')) {
-      alert('Please select an SVG file');
+    if (!file.type.includes("svg")) {
+      alert("Please select an SVG file");
       return;
     }
 
@@ -37,7 +37,7 @@ export default function SVGConverter() {
 
   const convertSVG = async () => {
     if (!svgContent) {
-      alert('Please select an SVG file first');
+      alert("Please select an SVG file first");
       return;
     }
 
@@ -46,25 +46,25 @@ export default function SVGConverter() {
       const canvas = canvasRef.current;
       if (!canvas) return;
 
-      const ctx = canvas.getContext('2d');
+      const ctx = canvas.getContext("2d");
       if (!ctx) return;
 
       // Parse SVG to get dimensions
       const parser = new DOMParser();
-      const svgDoc = parser.parseFromString(svgContent, 'image/svg+xml');
-      const svgElement = svgDoc.querySelector('svg');
+      const svgDoc = parser.parseFromString(svgContent, "image/svg+xml");
+      const svgElement = svgDoc.querySelector("svg");
 
       if (!svgElement) {
-        throw new Error('Invalid SVG file');
+        throw new Error("Invalid SVG file");
       }
 
       // Get original dimensions
-      const viewBox = svgElement.getAttribute('viewBox');
-      let origWidth = parseFloat(svgElement.getAttribute('width') || '0');
-      let origHeight = parseFloat(svgElement.getAttribute('height') || '0');
+      const viewBox = svgElement.getAttribute("viewBox");
+      let origWidth = parseFloat(svgElement.getAttribute("width") || "0");
+      let origHeight = parseFloat(svgElement.getAttribute("height") || "0");
 
       if (viewBox && (!origWidth || !origHeight)) {
-        const [, , vbWidth, vbHeight] = viewBox.split(' ').map(Number);
+        const [, , vbWidth, vbHeight] = viewBox.split(" ").map(Number);
         origWidth = vbWidth;
         origHeight = vbHeight;
       }
@@ -93,7 +93,9 @@ export default function SVGConverter() {
       }
 
       // Create blob from SVG
-      const svgBlob = new Blob([svgContent], { type: 'image/svg+xml;charset=utf-8' });
+      const svgBlob = new Blob([svgContent], {
+        type: "image/svg+xml;charset=utf-8",
+      });
       const url = URL.createObjectURL(svgBlob);
 
       // Load and draw image
@@ -103,8 +105,8 @@ export default function SVGConverter() {
         URL.revokeObjectURL(url);
 
         // Convert to desired format
-        const mimeType = format === 'png' ? 'image/png' : 'image/jpeg';
-        const quality = format === 'jpg' ? 0.95 : undefined;
+        const mimeType = format === "png" ? "image/png" : "image/jpeg";
+        const quality = format === "jpg" ? 0.95 : undefined;
         const dataUrl = canvas.toDataURL(mimeType, quality);
 
         setConvertedImage(dataUrl);
@@ -113,14 +115,14 @@ export default function SVGConverter() {
 
       img.onerror = () => {
         URL.revokeObjectURL(url);
-        alert('Failed to load SVG image');
+        alert("Failed to load SVG image");
         setLoading(false);
       };
 
       img.src = url;
     } catch (error) {
-      console.error('Conversion error:', error);
-      alert('Failed to convert SVG');
+      console.error("Conversion error:", error);
+      alert("Failed to convert SVG");
       setLoading(false);
     }
   };
@@ -131,17 +133,18 @@ export default function SVGConverter() {
     fetch(convertedImage)
       .then((res) => res.blob())
       .then((blob) => {
-        const filename = svgFile?.name.replace('.svg', `.${format}`) || `converted.${format}`;
+        const filename =
+          svgFile?.name.replace(".svg", `.${format}`) || `converted.${format}`;
         downloadFile(blob, filename);
       });
   };
 
   const resetConverter = () => {
     setSvgFile(null);
-    setSvgContent('');
+    setSvgContent("");
     setConvertedImage(null);
     if (fileInputRef.current) {
-      fileInputRef.current.value = '';
+      fileInputRef.current.value = "";
     }
   };
 
@@ -149,14 +152,17 @@ export default function SVGConverter() {
     <div className="space-y-6">
       <div className="bg-gradient-to-r from-green-500/20 to-emerald-500/20 border border-green-300 dark:border-green-700 rounded-lg p-4">
         <p className="text-sm text-white font-medium">
-          <strong>🎨 SVG Converter:</strong> Convert SVG files to PNG or JPG with custom dimensions
+          <strong>🎨 SVG Converter:</strong> Convert SVG files to PNG or JPG
+          with custom dimensions
         </p>
       </div>
 
       <div className="grid md:grid-cols-2 gap-6">
         {/* Controls */}
         <div className="space-y-4 bg-white/50 dark:bg-slate-800/50 p-6 rounded-lg backdrop-blur-sm">
-          <h3 className="text-lg font-bold text-white mb-4">⚙️ Conversion Settings</h3>
+          <h3 className="text-lg font-bold text-white mb-4">
+            ⚙️ Conversion Settings
+          </h3>
 
           {/* File Upload */}
           <div>
@@ -174,7 +180,7 @@ export default function SVGConverter() {
               onClick={() => fileInputRef.current?.click()}
               className="w-full px-4 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors font-medium"
             >
-              {svgFile ? `📄 ${svgFile.name}` : '📁 Choose SVG File'}
+              {svgFile ? `📄 ${svgFile.name}` : "📁 Choose SVG File"}
             </button>
           </div>
 
@@ -187,21 +193,21 @@ export default function SVGConverter() {
                 </label>
                 <div className="grid grid-cols-2 gap-3">
                   <button
-                    onClick={() => setFormat('png')}
+                    onClick={() => setFormat("png")}
                     className={`px-4 py-2 rounded-lg font-medium transition-all ${
-                      format === 'png'
-                        ? 'bg-green-600 text-white'
-                        : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300'
+                      format === "png"
+                        ? "bg-green-600 text-white"
+                        : "bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300"
                     }`}
                   >
                     🖼️ PNG
                   </button>
                   <button
-                    onClick={() => setFormat('jpg')}
+                    onClick={() => setFormat("jpg")}
                     className={`px-4 py-2 rounded-lg font-medium transition-all ${
-                      format === 'jpg'
-                        ? 'bg-green-600 text-white'
-                        : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300'
+                      format === "jpg"
+                        ? "bg-green-600 text-white"
+                        : "bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300"
                     }`}
                   >
                     🖼️ JPG
@@ -256,7 +262,7 @@ export default function SVGConverter() {
                   </label>
                 </div>
 
-                {format === 'png' && (
+                {format === "png" && (
                   <div className="flex items-center gap-2">
                     <input
                       type="checkbox"
@@ -293,7 +299,7 @@ export default function SVGConverter() {
                   disabled={loading}
                   className="flex-1 px-6 py-3 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-lg hover:from-green-700 hover:to-emerald-700 transition-colors font-medium disabled:opacity-50 shadow-lg"
                 >
-                  {loading ? '⏳ Converting...' : '✨ Convert SVG'}
+                  {loading ? "⏳ Converting..." : "✨ Convert SVG"}
                 </button>
                 <button
                   onClick={resetConverter}
@@ -312,7 +318,9 @@ export default function SVGConverter() {
 
           {svgContent && !convertedImage && (
             <div className="bg-white dark:bg-slate-700 p-6 rounded-lg">
-              <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">Original SVG:</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
+                Original SVG:
+              </p>
               <div
                 className="border border-gray-300 dark:border-gray-600 rounded p-4 max-h-96 overflow-auto"
                 dangerouslySetInnerHTML={{ __html: svgContent }}
@@ -350,7 +358,7 @@ export default function SVGConverter() {
         </div>
       </div>
 
-      <canvas ref={canvasRef} style={{ display: 'none' }} />
+      <canvas ref={canvasRef} style={{ display: "none" }} />
     </div>
   );
 }

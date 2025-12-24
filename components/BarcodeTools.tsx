@@ -1,25 +1,25 @@
-'use client';
+"use client";
 
-import { useState, useRef, useEffect } from 'react';
-import JsBarcode from 'jsbarcode';
-import jsQR from 'jsqr';
-import { downloadFile } from '@/lib/utils';
+import { useState, useRef, useEffect } from "react";
+import JsBarcode from "jsbarcode";
+import jsQR from "jsqr";
+import { downloadFile } from "@/lib/utils";
 
 const BARCODE_FORMATS = [
-  { value: 'CODE128', label: 'CODE128 (Default)' },
-  { value: 'EAN13', label: 'EAN-13 (13 digits)' },
-  { value: 'EAN8', label: 'EAN-8 (8 digits)' },
-  { value: 'UPC', label: 'UPC (12 digits)' },
-  { value: 'CODE39', label: 'CODE39' },
-  { value: 'ITF14', label: 'ITF-14 (14 digits)' },
-  { value: 'MSI', label: 'MSI' },
-  { value: 'pharmacode', label: 'Pharmacode' },
+  { value: "CODE128", label: "CODE128 (Default)" },
+  { value: "EAN13", label: "EAN-13 (13 digits)" },
+  { value: "EAN8", label: "EAN-8 (8 digits)" },
+  { value: "UPC", label: "UPC (12 digits)" },
+  { value: "CODE39", label: "CODE39" },
+  { value: "ITF14", label: "ITF-14 (14 digits)" },
+  { value: "MSI", label: "MSI" },
+  { value: "pharmacode", label: "Pharmacode" },
 ];
 
 export default function BarcodeTools() {
-  const [mode, setMode] = useState<'generate' | 'scan'>('generate');
-  const [text, setText] = useState('');
-  const [format, setFormat] = useState('CODE128');
+  const [mode, setMode] = useState<"generate" | "scan">("generate");
+  const [text, setText] = useState("");
+  const [format, setFormat] = useState("CODE128");
   const [barcodeGenerated, setBarcodeGenerated] = useState(false);
   const [scannedText, setScannedText] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -29,8 +29,8 @@ export default function BarcodeTools() {
   const [width, setWidth] = useState(2);
   const [height, setHeight] = useState(100);
   const [displayValue, setDisplayValue] = useState(true);
-  const [lineColor, setLineColor] = useState('#000000');
-  const [backgroundColor, setBackgroundColor] = useState('#ffffff');
+  const [lineColor, setLineColor] = useState("#000000");
+  const [backgroundColor, setBackgroundColor] = useState("#ffffff");
 
   const barcodeCanvasRef = useRef<HTMLCanvasElement>(null);
   const scanCanvasRef = useRef<HTMLCanvasElement>(null);
@@ -38,7 +38,7 @@ export default function BarcodeTools() {
 
   const generateBarcode = () => {
     if (!text.trim()) {
-      setError('Please enter text');
+      setError("Please enter text");
       return;
     }
 
@@ -70,7 +70,7 @@ export default function BarcodeTools() {
 
     canvas.toBlob((blob) => {
       if (blob) {
-        downloadFile(blob, 'barcode.png');
+        downloadFile(blob, "barcode.png");
       }
     });
   };
@@ -89,7 +89,7 @@ export default function BarcodeTools() {
           const canvas = scanCanvasRef.current;
           if (!canvas) return;
 
-          const ctx = canvas.getContext('2d');
+          const ctx = canvas.getContext("2d");
           if (!ctx) return;
 
           canvas.width = image.width;
@@ -102,7 +102,7 @@ export default function BarcodeTools() {
           if (code) {
             setScannedText(code.data);
           } else {
-            setError('No barcode/QR code found in the image');
+            setError("No barcode/QR code found in the image");
           }
           setLoading(false);
         };
@@ -111,7 +111,7 @@ export default function BarcodeTools() {
 
       reader.readAsDataURL(file);
     } catch {
-      setError('Failed to scan barcode');
+      setError("Failed to scan barcode");
       setLoading(false);
     }
   };
@@ -125,41 +125,51 @@ export default function BarcodeTools() {
 
   // Auto-generate on text change
   useEffect(() => {
-    if (text.trim() && mode === 'generate') {
+    if (text.trim() && mode === "generate") {
       const timer = setTimeout(() => {
         generateBarcode();
       }, 500);
       return () => clearTimeout(timer);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [text, format, width, height, displayValue, lineColor, backgroundColor, mode]);
+  }, [
+    text,
+    format,
+    width,
+    height,
+    displayValue,
+    lineColor,
+    backgroundColor,
+    mode,
+  ]);
 
   return (
     <div className="space-y-6">
       <div className="bg-gradient-to-r from-blue-500/20 to-cyan-500/20 border border-blue-300 dark:border-blue-700 rounded-lg p-4">
         <p className="text-sm text-white font-medium">
-          <strong>📊 Barcode Tools:</strong> Generate various barcode formats or scan barcodes from images
+          <strong>📊 Barcode Tools:</strong> Generate various barcode formats or
+          scan barcodes from images
         </p>
       </div>
 
       {/* Mode Selection */}
       <div className="flex gap-4">
         <button
-          onClick={() => setMode('generate')}
+          onClick={() => setMode("generate")}
           className={`flex-1 px-6 py-3 rounded-lg font-medium transition-all ${
-            mode === 'generate'
-              ? 'bg-blue-600 text-white shadow-lg'
-              : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
+            mode === "generate"
+              ? "bg-blue-600 text-white shadow-lg"
+              : "bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600"
           }`}
         >
           🎨 Generate Barcode
         </button>
         <button
-          onClick={() => setMode('scan')}
+          onClick={() => setMode("scan")}
           className={`flex-1 px-6 py-3 rounded-lg font-medium transition-all ${
-            mode === 'scan'
-              ? 'bg-blue-600 text-white shadow-lg'
-              : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
+            mode === "scan"
+              ? "bg-blue-600 text-white shadow-lg"
+              : "bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600"
           }`}
         >
           🔍 Scan Barcode
@@ -172,11 +182,13 @@ export default function BarcodeTools() {
         </div>
       )}
 
-      {mode === 'generate' ? (
+      {mode === "generate" ? (
         <div className="grid md:grid-cols-2 gap-6">
           {/* Generator Controls */}
           <div className="space-y-4 bg-white/50 dark:bg-slate-800/50 p-6 rounded-lg backdrop-blur-sm">
-            <h3 className="text-lg font-bold text-white mb-4">⚙️ Barcode Settings</h3>
+            <h3 className="text-lg font-bold text-white mb-4">
+              ⚙️ Barcode Settings
+            </h3>
 
             <div>
               <label className="block text-sm font-medium text-white mb-2">
@@ -207,10 +219,10 @@ export default function BarcodeTools() {
                 className="w-full p-3 border rounded-lg text-gray-700 focus:ring-2 focus:ring-blue-500"
               />
               <p className="text-xs text-gray-300 mt-1">
-                {format === 'EAN13' && 'Enter 12 or 13 digits'}
-                {format === 'EAN8' && 'Enter 7 or 8 digits'}
-                {format === 'UPC' && 'Enter 11 or 12 digits'}
-                {format === 'ITF14' && 'Enter 13 or 14 digits'}
+                {format === "EAN13" && "Enter 12 or 13 digits"}
+                {format === "EAN8" && "Enter 7 or 8 digits"}
+                {format === "UPC" && "Enter 11 or 12 digits"}
+                {format === "ITF14" && "Enter 13 or 14 digits"}
               </p>
             </div>
 
@@ -294,7 +306,7 @@ export default function BarcodeTools() {
                 <canvas
                   ref={barcodeCanvasRef}
                   className="w-full max-w-md mx-auto"
-                  style={{ display: barcodeGenerated ? 'block' : 'none' }}
+                  style={{ display: barcodeGenerated ? "block" : "none" }}
                 />
                 {barcodeGenerated && (
                   <button
@@ -318,7 +330,9 @@ export default function BarcodeTools() {
         <div className="space-y-4">
           {/* Scanner */}
           <div className="bg-white/50 dark:bg-slate-800/50 p-6 rounded-lg backdrop-blur-sm">
-            <h3 className="text-lg font-bold text-white mb-4">📷 Upload Image to Scan</h3>
+            <h3 className="text-lg font-bold text-white mb-4">
+              📷 Upload Image to Scan
+            </h3>
 
             <input
               ref={fileInputRef}
@@ -343,14 +357,18 @@ export default function BarcodeTools() {
 
           {scannedText && (
             <div className="bg-white/50 dark:bg-slate-800/50 p-6 rounded-lg backdrop-blur-sm">
-              <h3 className="text-lg font-bold text-white mb-4">✅ Scanned Result</h3>
+              <h3 className="text-lg font-bold text-white mb-4">
+                ✅ Scanned Result
+              </h3>
               <div className="bg-white dark:bg-slate-700 p-4 rounded">
-                <p className="text-gray-700 dark:text-gray-200 break-all">{scannedText}</p>
+                <p className="text-gray-700 dark:text-gray-200 break-all">
+                  {scannedText}
+                </p>
               </div>
               <button
                 onClick={() => {
                   navigator.clipboard.writeText(scannedText);
-                  alert('Copied to clipboard!');
+                  alert("Copied to clipboard!");
                 }}
                 className="w-full mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
               >
@@ -361,7 +379,7 @@ export default function BarcodeTools() {
         </div>
       )}
 
-      <canvas ref={scanCanvasRef} style={{ display: 'none' }} />
+      <canvas ref={scanCanvasRef} style={{ display: "none" }} />
     </div>
   );
 }

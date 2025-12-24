@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { PDFDocument, degrees, rgb, StandardFonts } from "pdf-lib";
 
 // Force dynamic rendering
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 // Lazy load pdfjs-dist to avoid build issues
 let pdfjsLib: typeof import("pdfjs-dist") | null = null;
@@ -18,7 +18,7 @@ async function getPdfjsLib() {
 export async function POST(request: NextRequest) {
   try {
     await getPdfjsLib(); // Initialize pdfjs-dist
-    
+
     const formData = await request.formData();
     const files = formData.getAll("files") as File[];
     const operation = formData.get("operation") as string;

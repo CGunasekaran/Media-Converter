@@ -1,28 +1,28 @@
-'use client';
+"use client";
 
-import { useState, useRef } from 'react';
-import QRCode from 'qrcode';
-import jsQR from 'jsqr';
-import { downloadFile } from '@/lib/utils';
+import { useState, useRef } from "react";
+import QRCode from "qrcode";
+import jsQR from "jsqr";
+import { downloadFile } from "@/lib/utils";
 
 export default function QRCodeTools() {
-  const [mode, setMode] = useState<'generate' | 'scan'>('generate');
-  const [text, setText] = useState('');
+  const [mode, setMode] = useState<"generate" | "scan">("generate");
+  const [text, setText] = useState("");
   const [qrImage, setQrImage] = useState<string | null>(null);
   const [scannedText, setScannedText] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  
+
   // Customization options
-  const [fgColor, setFgColor] = useState('#000000');
-  const [bgColor, setBgColor] = useState('#ffffff');
+  const [fgColor, setFgColor] = useState("#000000");
+  const [bgColor, setBgColor] = useState("#ffffff");
   const [size, setSize] = useState(300);
-  
+
   const fileInputRef = useRef<HTMLInputElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   const generateQRCode = async () => {
     if (!text.trim()) {
-      alert('Please enter text or URL');
+      alert("Please enter text or URL");
       return;
     }
 
@@ -38,8 +38,8 @@ export default function QRCodeTools() {
       });
       setQrImage(url);
     } catch (error) {
-      console.error('Error generating QR code:', error);
-      alert('Failed to generate QR code');
+      console.error("Error generating QR code:", error);
+      alert("Failed to generate QR code");
     } finally {
       setLoading(false);
     }
@@ -58,7 +58,7 @@ export default function QRCodeTools() {
           const canvas = canvasRef.current;
           if (!canvas) return;
 
-          const ctx = canvas.getContext('2d');
+          const ctx = canvas.getContext("2d");
           if (!ctx) return;
 
           canvas.width = image.width;
@@ -71,7 +71,7 @@ export default function QRCodeTools() {
           if (code) {
             setScannedText(code.data);
           } else {
-            alert('No QR code found in the image');
+            alert("No QR code found in the image");
           }
           setLoading(false);
         };
@@ -80,8 +80,8 @@ export default function QRCodeTools() {
 
       reader.readAsDataURL(file);
     } catch (error) {
-      console.error('Error scanning QR code:', error);
-      alert('Failed to scan QR code');
+      console.error("Error scanning QR code:", error);
+      alert("Failed to scan QR code");
       setLoading(false);
     }
   };
@@ -95,11 +95,11 @@ export default function QRCodeTools() {
 
   const downloadQRCode = () => {
     if (!qrImage) return;
-    
+
     fetch(qrImage)
-      .then(res => res.blob())
-      .then(blob => {
-        downloadFile(blob, 'qrcode.png');
+      .then((res) => res.blob())
+      .then((blob) => {
+        downloadFile(blob, "qrcode.png");
       });
   };
 
@@ -107,39 +107,42 @@ export default function QRCodeTools() {
     <div className="space-y-6">
       <div className="bg-gradient-to-r from-purple-500/20 to-blue-500/20 border border-purple-300 dark:border-purple-700 rounded-lg p-4">
         <p className="text-sm text-white font-medium">
-          <strong>📱 QR Code Tools:</strong> Generate custom QR codes or scan existing ones from images
+          <strong>📱 QR Code Tools:</strong> Generate custom QR codes or scan
+          existing ones from images
         </p>
       </div>
 
       {/* Mode Selection */}
       <div className="flex gap-4">
         <button
-          onClick={() => setMode('generate')}
+          onClick={() => setMode("generate")}
           className={`flex-1 px-6 py-3 rounded-lg font-medium transition-all ${
-            mode === 'generate'
-              ? 'bg-indigo-600 text-white shadow-lg'
-              : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
+            mode === "generate"
+              ? "bg-indigo-600 text-white shadow-lg"
+              : "bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600"
           }`}
         >
           🎨 Generate QR Code
         </button>
         <button
-          onClick={() => setMode('scan')}
+          onClick={() => setMode("scan")}
           className={`flex-1 px-6 py-3 rounded-lg font-medium transition-all ${
-            mode === 'scan'
-              ? 'bg-indigo-600 text-white shadow-lg'
-              : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
+            mode === "scan"
+              ? "bg-indigo-600 text-white shadow-lg"
+              : "bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600"
           }`}
         >
           🔍 Scan QR Code
         </button>
       </div>
 
-      {mode === 'generate' ? (
+      {mode === "generate" ? (
         <div className="grid md:grid-cols-2 gap-6">
           {/* Generator Controls */}
           <div className="space-y-4 bg-white/50 dark:bg-slate-800/50 p-6 rounded-lg backdrop-blur-sm">
-            <h3 className="text-lg font-bold text-white mb-4">⚙️ QR Code Settings</h3>
+            <h3 className="text-lg font-bold text-white mb-4">
+              ⚙️ QR Code Settings
+            </h3>
 
             <div>
               <label className="block text-sm font-medium text-white mb-2">
@@ -199,7 +202,7 @@ export default function QRCodeTools() {
               disabled={loading || !text.trim()}
               className="w-full px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg hover:from-purple-700 hover:to-blue-700 transition-colors font-medium disabled:opacity-50 shadow-lg"
             >
-              {loading ? '⏳ Generating...' : '✨ Generate QR Code'}
+              {loading ? "⏳ Generating..." : "✨ Generate QR Code"}
             </button>
           </div>
 
@@ -209,7 +212,11 @@ export default function QRCodeTools() {
             {qrImage ? (
               <div className="bg-white dark:bg-slate-700 p-6 rounded-lg">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={qrImage} alt="QR Code" className="w-full max-w-md mx-auto" />
+                <img
+                  src={qrImage}
+                  alt="QR Code"
+                  className="w-full max-w-md mx-auto"
+                />
                 <button
                   onClick={downloadQRCode}
                   className="w-full mt-4 px-4 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium"
@@ -230,7 +237,9 @@ export default function QRCodeTools() {
         <div className="space-y-4">
           {/* Scanner */}
           <div className="bg-white/50 dark:bg-slate-800/50 p-6 rounded-lg backdrop-blur-sm">
-            <h3 className="text-lg font-bold text-white mb-4">📷 Upload Image to Scan</h3>
+            <h3 className="text-lg font-bold text-white mb-4">
+              📷 Upload Image to Scan
+            </h3>
 
             <input
               ref={fileInputRef}
@@ -255,14 +264,18 @@ export default function QRCodeTools() {
 
           {scannedText && (
             <div className="bg-white/50 dark:bg-slate-800/50 p-6 rounded-lg backdrop-blur-sm">
-              <h3 className="text-lg font-bold text-white mb-4">✅ Scanned Result</h3>
+              <h3 className="text-lg font-bold text-white mb-4">
+                ✅ Scanned Result
+              </h3>
               <div className="bg-white dark:bg-slate-700 p-4 rounded">
-                <p className="text-gray-700 dark:text-gray-200 break-all">{scannedText}</p>
+                <p className="text-gray-700 dark:text-gray-200 break-all">
+                  {scannedText}
+                </p>
               </div>
               <button
                 onClick={() => {
                   navigator.clipboard.writeText(scannedText);
-                  alert('Copied to clipboard!');
+                  alert("Copied to clipboard!");
                 }}
                 className="w-full mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
               >
@@ -273,7 +286,7 @@ export default function QRCodeTools() {
         </div>
       )}
 
-      <canvas ref={canvasRef} style={{ display: 'none' }} />
+      <canvas ref={canvasRef} style={{ display: "none" }} />
     </div>
   );
 }
