@@ -1,6 +1,18 @@
 # 🎨 Media Converter Suite
 
-A comprehensive, modern media conversion application built with Next.js 15, featuring a beautiful gradient UI and powerful image processing capabilities.
+A comprehensive, all-in-one media conversion and editing application built with Next.js 15, featuring 22 powerful tools with a beautiful gradient UI and advanced image processing capabilities.
+
+## 🌟 Overview
+
+Media Converter Suite is your one-stop solution for all media conversion, editing, and generation needs. From basic format conversions to advanced creative tools, this application provides everything you need to work with images, PDFs, documents, and more - all in your browser with a modern, intuitive interface.
+
+## 📊 Tool Count
+
+✅ **22 Professional Tools** including:
+- 5 Basic Conversion Tools
+- 6 Creative & Design Tools
+- 4 Optimization & Encoding Tools
+- 7 Professional Document Tools
 
 ## ✨ Features
 
@@ -73,6 +85,68 @@ A comprehensive, modern media conversion application built with Next.js 15, feat
 - **Data Visualization** - Create interactive charts (bar, line, pie) from data
 - **Preview & Download** - View converted data before downloading
 
+### 🎭 **Creative Tools**
+- **Meme Generator** - Create memes with top and bottom text
+  - Multiple font styles (Impact, Arial, Comic Sans, etc.)
+  - Adjustable font size and color
+  - Automatic text positioning and styling
+  - Instant preview and download
+  
+- **Collage Maker** - Create beautiful photo collages
+  - 8 layout templates (grid, masonry, horizontal, vertical, spotlight, etc.)
+  - Drag & drop multiple images
+  - Automatic layout arrangement
+  - High-quality PNG export
+  
+- **Placeholder Generator** - Generate placeholder images for design
+  - 8 pattern types (solid, gradient, grid, dots, stripes, etc.)
+  - Custom dimensions (100-2000px)
+  - Custom text overlays
+  - Instant generation and download
+  
+- **Color Palette Extractor** - Extract color palettes from images
+  - Automatic dominant color detection
+  - 5-color palette generation
+  - Hex color codes with copy functionality
+  - Color distribution analysis
+
+### 📸 **Screenshot Tool**
+- **Screen Capture** - Capture your screen with annotation tools
+  - Fullscreen, window, or area selection
+  - 6 annotation tools: pen, line, arrow, rectangle, circle, text
+  - Customizable colors and stroke widths
+  - Undo/redo functionality
+  - Export in PNG, JPG, or WebP formats
+
+### 🎨 **Icon Generator**
+- **Multi-Platform Icons** - Generate icons for all platforms
+  - 26 icon sizes (16x16 to 1024x1024)
+  - Favicon formats (16x16, 32x32, 48x48)
+  - iOS icons (57x57 to 180x180)
+  - Android icons (36x36 to 192x192)
+  - PWA icons (144x144, 192x192, 512x512)
+  - Filter by platform or download all as ZIP
+
+### 🚀 **Image Optimizer**
+- **Web Optimization** - Optimize images for web performance
+  - WebP conversion with quality control
+  - Generate responsive image sets (320px, 640px, 1024px, 1920px)
+  - HTML `<picture>` element code generation
+  - Size comparison before/after
+  - Automatic format recommendations
+
+### 🔐 **Base64 Tools**
+- **Base64 Encoder** - Convert images to Base64 strings
+  - Encode any image format to Base64
+  - Copy Base64 string or download as text file
+  - HTML `<img>` tag code generation
+  - CSS `background-image` code generation
+  
+- **Base64 Decoder** - Convert Base64 strings back to images
+  - Paste Base64 string to decode
+  - Preview decoded image
+  - Download in original or converted format
+
 ## 🚀 Getting Started
 
 ### Prerequisites
@@ -107,12 +181,18 @@ Open [http://localhost:3000](http://localhost:3000) to see the application.
 - **TypeScript** - Type-safe development
 - **Tailwind CSS** - Modern, utility-first styling
 - **Sharp** - High-performance image processing
-- **jsPDF** - PDF generation
+- **jsPDF** - PDF generation and manipulation
 - **pdf-lib** - PDF manipulation and editing
 - **Tesseract.js** - OCR for text extraction
 - **pdfjs-dist** - PDF parsing and rendering
 - **@imgly/background-removal** - AI-powered background removal
-- **Canvas (node-canvas)** - Server-side canvas rendering
+- **Canvas API** - Client-side image manipulation and drawing
+- **html2canvas** - Screenshot capture functionality
+- **QRCode.js** - QR code generation
+- **jsQR** - QR code scanning
+- **JsBarcode** - Barcode generation (8 formats)
+- **XLSX** - Excel/CSV file processing
+- **JSZip** - ZIP file creation for batch downloads
 
 ## 📁 Project Structure
 
@@ -122,30 +202,34 @@ media-converter/
 │   ├── api/              # API routes for server-side processing
 │   │   ├── convert-image/
 │   │   ├── image-to-pdf/
-│   │   ├── scan-document/
-│   │   └── excel-to-pdf/
+│   │   ├── image-to-text/
+│   │   ├── pdf-to-image/
+│   │   └── text-to-image/
 │   ├── layout.tsx        # Root layout with header/footer
-│   ├── page.tsx          # Main page with section-based layout
-│   └── globals.css       # Global styles
-├── components/           # React components (14 tools)
+│   ├── page.tsx          # Main page with tool sections
+│   └── globals.css       # Global styles with gradient themes
+├── components/           # React components (22 tools)
 │   ├── BackgroundRemover.tsx
 │   ├── BarcodeTools.tsx
+│   ├── Base64Tool.tsx
 │   ├── BatchImageProcessor.tsx
+│   ├── CollageMaker.tsx
+│   ├── ColorPalette.tsx
 │   ├── DocumentScanner.tsx
 │   ├── ExcelCSVTools.tsx
+│   ├── IconGenerator.tsx
 │   ├── ImageConverter.tsx
 │   ├── ImageEditor.tsx
+│   ├── ImageOptimizer.tsx
 │   ├── ImageToPDF.tsx
 │   ├── ImageToText.tsx
+│   ├── MemeGenerator.tsx
 │   ├── PDFToImage.tsx
 │   ├── PDFTools.tsx
+│   ├── PlaceholderGenerator.tsx
 │   ├── QRCodeTools.tsx
-│   ├── SVGConverterverter.tsx
-│   ├── ImageEditor.tsx
-│   ├── ImageToPDF.tsx
-│   ├── ImageToText.tsx
-│   ├── PDFToImage.tsx
-│   ├── PDFTools.tsx
+│   ├── ScreenshotTool.tsx
+│   ├── SVGConverter.tsx
 │   └── TextToImage.tsx
 ├── lib/
 │   └── utils.ts          # Utility functions
