@@ -1,6 +1,6 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { PDFDocument, degrees, rgb, StandardFonts } from 'pdf-lib';
-import * as pdfjsLib from 'pdfjs-dist';
+import { NextRequest, NextResponse } from "next/server";
+import { PDFDocument, degrees, rgb, StandardFonts } from "pdf-lib";
+import * as pdfjsLib from "pdfjs-dist";
 
 // Set up PDF.js worker
 pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
@@ -8,53 +8,57 @@ pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.j
 export async function POST(request: NextRequest) {
   try {
     const formData = await request.formData();
-    const files = formData.getAll('files') as File[];
-    const operation = formData.get('operation') as string;
+    const files = formData.getAll("files") as File[];
+    const operation = formData.get("operation") as string;
 
     if (!files || files.length === 0) {
-      return NextResponse.json({ error: 'No files provided' }, { status: 400 });
+      return NextResponse.json({ error: "No files provided" }, { status: 400 });
     }
 
     let resultPdf: PDFDocument;
 
     switch (operation) {
-      case 'merge':
+      case "merge":
         resultPdf = await mergePDFs(files);
         break;
-      case 'split':
-        const pageRanges = formData.get('pageRanges') as string;
+      case "split":
+        const pageRanges = formData.get("pageRanges") as string;
         resultPdf = await splitPDF(files[0], pageRanges);
         break;
-      case 'rotate':
-        const rotationAngle = parseInt(formData.get('rotationAngle') as string) || 90;
+      case "rotate":
+        const rotationAngle =
+          parseInt(formData.get("rotationAngle") as string) || 90;
         resultPdf = await rotatePDF(files[0], rotationAngle);
         break;
-      case 'add-page-numbers':
-        const position = formData.get('pageNumberPosition') as string;
+      case "add-page-numbers":
+        const position = formData.get("pageNumberPosition") as string;
         resultPdf = await addPageNumbers(files[0], position);
         break;
-      case 'compress':
+      case "compress":
         resultPdf = await compressPDF(files[0]);
         break;
-      case 'extract-text':
+      case "extract-text":
         const text = await extractTextFromPDF(files[0]);
         return NextResponse.json({ text });
       default:
-        return NextResponse.json({ error: 'Invalid operation' }, { status: 400 });
+        return NextResponse.json(
+          { error: "Invalid operation" },
+          { status: 400 }
+        );
     }
 
     const pdfBytes = await resultPdf.save();
 
     return new NextResponse(new Uint8Array(pdfBytes), {
       headers: {
-        'Content-Type': 'application/pdf',
-        'Content-Disposition': `attachment; filename="${operation}.pdf"`,
+        "Content-Type": "application/pdf",
+        "Content-Disposition": `attachment; filename="${operation}.pdf"`,
       },
     });
   } catch (error) {
-    console.error('PDF tools error:', error);
+    console.error("PDF tools error:", error);
     return NextResponse.json(
-      { error: 'Failed to process PDF' },
+      { error: "Failed to process PDF" },
       { status: 500 }
     );
   }
@@ -79,12 +83,12 @@ async function splitPDF(file: File, rangesStr: string): Promise<PDFDocument> {
   const newPdf = await PDFDocument.create();
 
   // Parse ranges like "1-3,5,7-10"
-  const ranges = rangesStr.split(',').map(range => range.trim());
+  const ranges = rangesStr.split(",").map((range) => range.trim());
   const pageIndices: number[] = [];
 
   for (const range of ranges) {
-    if (range.includes('-')) {
-      const [start, end] = range.split('-').map(n => parseInt(n.trim()) - 1);
+    if (range.includes("-")) {
+      const [start, end] = range.split("-").map((n) => parseInt(n.trim()) - 1);
       for (let i = start; i <= end; i++) {
         if (i >= 0 && i < originalPdf.getPageCount()) {
           pageIndices.push(i);
@@ -116,7 +120,10 @@ async function rotatePDF(file: File, angle: number): Promise<PDFDocument> {
   return pdfDoc;
 }
 
-async function addPageNumbers(file: File, position: string): Promise<PDFDocument> {
+async function addPageNumbers(
+  file: File,
+  position: string
+): Promise<PDFDocument> {
   const bytes = await file.arrayBuffer();
   const pdfDoc = await PDFDocument.load(bytes);
   const pages = pdfDoc.getPages();
@@ -130,15 +137,15 @@ async function addPageNumbers(file: File, position: string): Promise<PDFDocument
     let x: number, y: number;
 
     switch (position) {
-      case 'bottom-center':
+      case "bottom-center":
         x = width / 2 - (fontSize * pageNumber.length) / 4;
         y = 20;
         break;
-      case 'bottom-right':
+      case "bottom-right":
         x = width - 50;
         y = 20;
         break;
-      case 'top-right':
+      case "top-right":
         x = width - 50;
         y = height - 30;
         break;
@@ -162,18 +169,18 @@ async function addPageNumbers(file: File, position: string): Promise<PDFDocument
 async function compressPDF(file: File): Promise<PDFDocument> {
   const bytes = await file.arrayBuffer();
   const pdfDoc = await PDFDocument.load(bytes);
-  
+
   // Note: pdf-lib doesn't directly support image compression
   // This is a basic implementation that removes metadata
   // For better compression, you'd need additional libraries
-  
+
   // Remove metadata to reduce size
-  pdfDoc.setTitle('');
-  pdfDoc.setAuthor('');
-  pdfDoc.setSubject('');
+  pdfDoc.setTitle("");
+  pdfDoc.setAuthor("");
+  pdfDoc.setSubject("");
   pdfDoc.setKeywords([]);
-  pdfDoc.setProducer('');
-  pdfDoc.setCreator('');
+  pdfDoc.setProducer("");
+  pdfDoc.setCreator("");
 
   return pdfDoc;
 }
@@ -185,14 +192,14 @@ async function extractTextFromPDF(file: File): Promise<string> {
   const loadingTask = pdfjsLib.getDocument({ data: uint8Array });
   const pdf = await loadingTask.promise;
 
-  let fullText = '';
+  let fullText = "";
 
   for (let i = 1; i <= pdf.numPages; i++) {
     const page = await pdf.getPage(i);
     const textContent = await page.getTextContent();
     const pageText = textContent.items
-      .map((item) => ('str' in item ? item.str : ''))
-      .join(' ');
+      .map((item) => ("str" in item ? item.str : ""))
+      .join(" ");
     fullText += `\n--- Page ${i} ---\n${pageText}\n`;
   }
 

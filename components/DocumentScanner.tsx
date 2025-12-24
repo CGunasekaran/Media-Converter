@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { useState, useRef, useEffect } from 'react';
-import { downloadFile } from '@/lib/utils';
+import { useState, useRef, useEffect } from "react";
+import { downloadFile } from "@/lib/utils";
 
 export default function DocumentScanner() {
   const [stream, setStream] = useState<MediaStream | null>(null);
@@ -9,35 +9,35 @@ export default function DocumentScanner() {
   const [processedImage, setProcessedImage] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [cameraActive, setCameraActive] = useState(false);
-  
+
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   const startCamera = async () => {
     try {
       const mediaStream = await navigator.mediaDevices.getUserMedia({
-        video: { 
-          facingMode: 'environment',
+        video: {
+          facingMode: "environment",
           width: { ideal: 1920 },
-          height: { ideal: 1080 }
-        }
+          height: { ideal: 1080 },
+        },
       });
-      
+
       setStream(mediaStream);
       setCameraActive(true);
-      
+
       if (videoRef.current) {
         videoRef.current.srcObject = mediaStream;
       }
     } catch (error) {
-      console.error('Error accessing camera:', error);
-      alert('Failed to access camera. Please grant camera permissions.');
+      console.error("Error accessing camera:", error);
+      alert("Failed to access camera. Please grant camera permissions.");
     }
   };
 
   const stopCamera = () => {
     if (stream) {
-      stream.getTracks().forEach(track => track.stop());
+      stream.getTracks().forEach((track) => track.stop());
       setStream(null);
       setCameraActive(false);
     }
@@ -48,15 +48,15 @@ export default function DocumentScanner() {
 
     const video = videoRef.current;
     const canvas = canvasRef.current;
-    const context = canvas.getContext('2d');
-    
+    const context = canvas.getContext("2d");
+
     if (!context) return;
 
     canvas.width = video.videoWidth;
     canvas.height = video.videoHeight;
     context.drawImage(video, 0, 0);
-    
-    const imageData = canvas.toDataURL('image/jpeg', 0.95);
+
+    const imageData = canvas.toDataURL("image/jpeg", 0.95);
     setCapturedImage(imageData);
     setProcessedImage(null);
     stopCamera();
@@ -74,24 +74,24 @@ export default function DocumentScanner() {
 
       // Create FormData
       const formData = new FormData();
-      formData.append('file', blob, 'scan.jpg');
+      formData.append("file", blob, "scan.jpg");
 
       // Send to API for processing
-      const apiResponse = await fetch('/api/scan-document', {
-        method: 'POST',
+      const apiResponse = await fetch("/api/scan-document", {
+        method: "POST",
         body: formData,
       });
 
       if (!apiResponse.ok) {
-        throw new Error('Failed to process document');
+        throw new Error("Failed to process document");
       }
 
       const resultBlob = await apiResponse.blob();
       const url = URL.createObjectURL(resultBlob);
       setProcessedImage(url);
     } catch (error) {
-      console.error('Error processing document:', error);
-      alert('Failed to process document. Showing original image.');
+      console.error("Error processing document:", error);
+      alert("Failed to process document. Showing original image.");
       setProcessedImage(capturedImage);
     } finally {
       setLoading(false);
@@ -109,22 +109,22 @@ export default function DocumentScanner() {
       const blob = await response.blob();
 
       const formData = new FormData();
-      formData.append('files', blob, 'scan.jpg');
+      formData.append("files", blob, "scan.jpg");
 
-      const apiResponse = await fetch('/api/image-to-pdf', {
-        method: 'POST',
+      const apiResponse = await fetch("/api/image-to-pdf", {
+        method: "POST",
         body: formData,
       });
 
       if (!apiResponse.ok) {
-        throw new Error('Failed to convert to PDF');
+        throw new Error("Failed to convert to PDF");
       }
 
       const pdfBlob = await apiResponse.blob();
-      downloadFile(pdfBlob, 'scanned-document.pdf');
+      downloadFile(pdfBlob, "scanned-document.pdf");
     } catch (error) {
-      console.error('Error converting to PDF:', error);
-      alert('Failed to convert to PDF');
+      console.error("Error converting to PDF:", error);
+      alert("Failed to convert to PDF");
     } finally {
       setLoading(false);
     }
@@ -133,11 +133,11 @@ export default function DocumentScanner() {
   const downloadImage = () => {
     const imageToDownload = processedImage || capturedImage;
     if (!imageToDownload) return;
-    
+
     fetch(imageToDownload)
-      .then(res => res.blob())
-      .then(blob => {
-        downloadFile(blob, 'scanned-document.jpg');
+      .then((res) => res.blob())
+      .then((blob) => {
+        downloadFile(blob, "scanned-document.jpg");
       });
   };
 
@@ -150,7 +150,7 @@ export default function DocumentScanner() {
   useEffect(() => {
     return () => {
       if (stream) {
-        stream.getTracks().forEach(track => track.stop());
+        stream.getTracks().forEach((track) => track.stop());
       }
     };
   }, [stream]);
@@ -159,7 +159,8 @@ export default function DocumentScanner() {
     <div className="space-y-6">
       <div className="bg-gradient-to-r from-emerald-500/20 to-teal-500/20 border border-emerald-300 dark:border-emerald-700 rounded-lg p-4">
         <p className="text-sm text-white font-medium">
-          <strong>📸 Document Scanner:</strong> Use your camera to scan documents with automatic edge detection and perspective correction
+          <strong>📸 Document Scanner:</strong> Use your camera to scan
+          documents with automatic edge detection and perspective correction
         </p>
       </div>
 
@@ -211,10 +212,10 @@ export default function DocumentScanner() {
               <h3 className="text-lg font-bold text-white mb-2">📷 Captured</h3>
               <div className="bg-gray-200 dark:bg-gray-700 rounded-lg p-4">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img 
-                  src={capturedImage} 
-                  alt="Captured" 
-                  className="w-full rounded-lg shadow-lg" 
+                <img
+                  src={capturedImage}
+                  alt="Captured"
+                  className="w-full rounded-lg shadow-lg"
                 />
               </div>
             </div>
@@ -222,13 +223,15 @@ export default function DocumentScanner() {
             {/* Processed Image */}
             {processedImage && (
               <div>
-                <h3 className="text-lg font-bold text-white mb-2">✨ Processed</h3>
+                <h3 className="text-lg font-bold text-white mb-2">
+                  ✨ Processed
+                </h3>
                 <div className="bg-gray-200 dark:bg-gray-700 rounded-lg p-4">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img 
-                    src={processedImage} 
-                    alt="Processed" 
-                    className="w-full rounded-lg shadow-lg" 
+                  <img
+                    src={processedImage}
+                    alt="Processed"
+                    className="w-full rounded-lg shadow-lg"
                   />
                 </div>
               </div>
@@ -238,14 +241,14 @@ export default function DocumentScanner() {
           {/* Actions */}
           <div className="bg-white/50 dark:bg-slate-800/50 p-6 rounded-lg backdrop-blur-sm space-y-3">
             <h3 className="text-lg font-bold text-white mb-4">🛠️ Actions</h3>
-            
+
             {!processedImage && (
               <button
                 onClick={processDocument}
                 disabled={loading}
                 className="w-full px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg hover:from-purple-700 hover:to-pink-700 transition-colors font-medium disabled:opacity-50 shadow-lg"
               >
-                {loading ? '⏳ Processing...' : '✨ Auto-Crop & Enhance'}
+                {loading ? "⏳ Processing..." : "✨ Auto-Crop & Enhance"}
               </button>
             )}
 
@@ -254,7 +257,7 @@ export default function DocumentScanner() {
               disabled={loading}
               className="w-full px-6 py-3 bg-gradient-to-r from-red-600 to-orange-600 text-white rounded-lg hover:from-red-700 hover:to-orange-700 transition-colors font-medium disabled:opacity-50 shadow-lg"
             >
-              {loading ? '⏳ Converting...' : '📄 Convert to PDF'}
+              {loading ? "⏳ Converting..." : "📄 Convert to PDF"}
             </button>
 
             <button
@@ -274,7 +277,7 @@ export default function DocumentScanner() {
         </div>
       )}
 
-      <canvas ref={canvasRef} style={{ display: 'none' }} />
+      <canvas ref={canvasRef} style={{ display: "none" }} />
     </div>
   );
 }
