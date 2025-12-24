@@ -4,6 +4,28 @@ export interface ConversionResult {
   error?: string;
 }
 
-export type ImageFormat = 'png' | 'jpg' | 'jpeg' | 'webp';
+export type ImageFormat = "png" | "jpg" | "jpeg" | "webp";
 
-export type TabType = 'image-to-text' | 'text-to-image' | 'image-to-pdf' | 'pdf-to-image' | 'image-converter';
+export type TabType =
+  | "image-to-text"
+  | "text-to-image"
+  | "image-to-pdf"
+  | "pdf-to-image"
+  | "image-converter"
+  | "image-editor"
+  | "batch-processor"
+  | "background-remover"
+  | "pdf-tools"
+  | "document-scanner"
+  | "qrcode-tools"
+  | "barcode-tools"
+  | "svg-converter"
+  | "excel-csv-tools"
+  | "meme-generator"
+  | "collage-maker"
+  | "placeholder-generator"
+  | "color-palette-extractor"
+  | "screenshot-tool"
+  | "icon-generator"
+  | "image-optimizer"
+  | "base64-tool";

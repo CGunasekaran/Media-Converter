@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { useDropzone } from 'react-dropzone';
-import { jsPDF } from 'jspdf';
-import { MAX_FILE_SIZE, formatFileSize, downloadFile } from '@/lib/utils';
+import { useState } from "react";
+import { useDropzone } from "react-dropzone";
+import { jsPDF } from "jspdf";
+import { MAX_FILE_SIZE, formatFileSize, downloadFile } from "@/lib/utils";
 
 interface ImageFile {
   file: File;
@@ -16,21 +16,21 @@ export default function ImageToPDF() {
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     accept: {
-      'image/*': ['.png', '.jpg', '.jpeg', '.webp']
+      "image/*": [".png", ".jpg", ".jpeg", ".webp"],
     },
     maxSize: MAX_FILE_SIZE,
     multiple: true,
     onDrop: (acceptedFiles) => {
-      const newImages = acceptedFiles.map(file => ({
+      const newImages = acceptedFiles.map((file) => ({
         file,
-        preview: URL.createObjectURL(file)
+        preview: URL.createObjectURL(file),
       }));
-      setImages(prev => [...prev, ...newImages]);
-    }
+      setImages((prev) => [...prev, ...newImages]);
+    },
   });
 
   const removeImage = (index: number) => {
-    setImages(prev => {
+    setImages((prev) => {
       const newImages = [...prev];
       URL.revokeObjectURL(newImages[index].preview);
       newImages.splice(index, 1);
@@ -40,7 +40,7 @@ export default function ImageToPDF() {
 
   const convertToPDF = async () => {
     if (images.length === 0) {
-      alert('Please add at least one image');
+      alert("Please add at least one image");
       return;
     }
 
@@ -48,34 +48,34 @@ export default function ImageToPDF() {
 
     try {
       const pdf = new jsPDF();
-      
+
       for (let i = 0; i < images.length; i++) {
         const img = images[i];
         const imgData = await loadImage(img.preview);
-        
+
         if (i > 0) {
           pdf.addPage();
         }
 
         const pdfWidth = pdf.internal.pageSize.getWidth();
         const pdfHeight = pdf.internal.pageSize.getHeight();
-        
+
         const imgWidth = imgData.width;
         const imgHeight = imgData.height;
         const ratio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight);
-        
+
         const finalWidth = imgWidth * ratio;
         const finalHeight = imgHeight * ratio;
         const x = (pdfWidth - finalWidth) / 2;
         const y = (pdfHeight - finalHeight) / 2;
 
-        pdf.addImage(img.preview, 'JPEG', x, y, finalWidth, finalHeight);
+        pdf.addImage(img.preview, "JPEG", x, y, finalWidth, finalHeight);
       }
 
-      pdf.save('images-converted.pdf');
+      pdf.save("images-converted.pdf");
     } catch (error) {
-      console.error('Error converting to PDF:', error);
-      alert('Failed to convert images to PDF');
+      console.error("Error converting to PDF:", error);
+      alert("Failed to convert images to PDF");
     } finally {
       setConverting(false);
     }
@@ -96,18 +96,19 @@ export default function ImageToPDF() {
         {...getRootProps()}
         className={`border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-colors ${
           isDragActive
-            ? 'border-indigo-500 bg-indigo-50'
-            : 'border-gray-300 hover:border-indigo-400'
+            ? "border-indigo-500 bg-indigo-50"
+            : "border-gray-300 hover:border-indigo-400"
         }`}
       >
         <input {...getInputProps()} />
         <div className="space-y-2">
           <div className="text-4xl">🖼️</div>
-          <p className="text-lg font-medium text-gray-700">
-            {isDragActive ? 'Drop the images here' : 'Drag & drop images'}
+          <p className="text-lg font-medium text-white dark:text-white">
+            {isDragActive ? "Drop the images here" : "Drag & drop images"}
           </p>
-          <p className="text-sm text-gray-500">
-            or click to select multiple images (Max size: {formatFileSize(MAX_FILE_SIZE)} each)
+          <p className="text-sm text-white/70 dark:text-white/70">
+            or click to select multiple images (Max size:{" "}
+            {formatFileSize(MAX_FILE_SIZE)} each)
           </p>
         </div>
       </div>
@@ -128,7 +129,9 @@ export default function ImageToPDF() {
                 >
                   ×
                 </button>
-                <p className="text-xs text-gray-600 mt-1 truncate">{img.file.name}</p>
+                <p className="text-xs text-gray-600 mt-1 truncate">
+                  {img.file.name}
+                </p>
               </div>
             ))}
           </div>
@@ -139,7 +142,9 @@ export default function ImageToPDF() {
               disabled={converting}
               className="flex-1 px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors font-medium disabled:bg-gray-400"
             >
-              {converting ? 'Converting...' : `Convert ${images.length} image(s) to PDF`}
+              {converting
+                ? "Converting..."
+                : `Convert ${images.length} image(s) to PDF`}
             </button>
             <button
               onClick={() => setImages([])}

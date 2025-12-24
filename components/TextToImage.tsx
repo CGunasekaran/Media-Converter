@@ -75,7 +75,7 @@ export default function TextToImage() {
             <textarea
               value={text}
               onChange={(e) => setText(e.target.value)}
-              className="w-full h-40 p-4 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+              className="w-full h-40 p-4 border rounded-lg text-white dark:text-white bg-gray-800 dark:bg-gray-800 focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
               placeholder="Type your text here..."
             />
           </div>
