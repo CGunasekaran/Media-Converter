@@ -20,4 +20,8 @@ export type TabType =
   | "qrcode-tools"
   | "barcode-tools"
   | "svg-converter"
-  | "excel-csv-tools";
+  | "excel-csv-tools"
+  | "meme-generator"
+  | "collage-maker"
+  | "placeholder-generator"
+  | "color-palette-extractor";

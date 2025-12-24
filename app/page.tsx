@@ -14,6 +14,10 @@ import QRCodeTools from "@/components/QRCodeTools";
 import BarcodeTools from "@/components/BarcodeTools";
 import SVGConverter from "@/components/SVGConverter";
 import ExcelCSVTools from "@/components/ExcelCSVTools";
+import MemeGenerator from "@/components/MemeGenerator";
+import CollageMaker from "@/components/CollageMaker";
+import PlaceholderGenerator from "@/components/PlaceholderGenerator";
+import ColorPaletteExtractor from "@/components/ColorPaletteExtractor";
 
 export default function Home() {
   const tools = [
@@ -100,6 +104,30 @@ export default function Home() {
       label: "Excel/CSV Tools",
       icon: "📈",
       component: <ExcelCSVTools />,
+    },
+    {
+      id: "meme-generator",
+      label: "Meme Generator",
+      icon: "😂",
+      component: <MemeGenerator />,
+    },
+    {
+      id: "collage-maker",
+      label: "Collage Maker",
+      icon: "🖼️",
+      component: <CollageMaker />,
+    },
+    {
+      id: "placeholder-generator",
+      label: "Image Placeholder Generator",
+      icon: "🎯",
+      component: <PlaceholderGenerator />,
+    },
+    {
+      id: "color-palette-extractor",
+      label: "Color Palette Extractor",
+      icon: "🎨",
+      component: <ColorPaletteExtractor />,
     },
   ];
 
