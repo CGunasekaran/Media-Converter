@@ -227,7 +227,7 @@ export default function PlaceholderGenerator() {
               value={text}
               onChange={(e) => setText(e.target.value)}
               placeholder="Enter text..."
-              className="w-full p-3 border rounded-lg text-gray-700"
+              className="w-full p-3 border rounded-lg text-white dark:text-white bg-gray-800 dark:bg-gray-800"
             />
           </div>
 

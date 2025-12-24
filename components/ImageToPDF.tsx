@@ -103,10 +103,10 @@ export default function ImageToPDF() {
         <input {...getInputProps()} />
         <div className="space-y-2">
           <div className="text-4xl">🖼️</div>
-          <p className="text-lg font-medium text-gray-700">
+          <p className="text-lg font-medium text-white dark:text-white">
             {isDragActive ? 'Drop the images here' : 'Drag & drop images'}
           </p>
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-white/70 dark:text-white/70">
             or click to select multiple images (Max size: {formatFileSize(MAX_FILE_SIZE)} each)
           </p>
         </div>

@@ -205,7 +205,7 @@ export default function BatchImageProcessor() {
           <select
             value={operation}
             onChange={(e) => setOperation(e.target.value as BatchOperation)}
-            className="w-full p-3 border rounded-lg text-gray-700 font-medium"
+            className="w-full p-3 border rounded-lg text-white dark:text-white bg-gray-800 dark:bg-gray-800 font-medium"
           >
             <option value="resize">📏 Resize Images</option>
             <option value="filter">🎨 Apply Filter</option>
