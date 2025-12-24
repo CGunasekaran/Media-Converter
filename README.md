@@ -48,6 +48,31 @@ A comprehensive, modern media conversion application built with Next.js 15, feat
 - **Convert to PDF** - Convert scanned documents directly to PDF
 - **Save as Image** - Download scanned documents as JPEG images
 
+### 📱 **QR Code Tools**
+- **QR Code Generator** - Create custom QR codes from text or URLs
+- **Color Customization** - Choose QR code and background colors
+- **Size Control** - Generate QR codes from 200px to 600px
+- **QR Code Scanner** - Scan and decode QR codes from images
+
+### 📊 **Barcode Tools**
+- **Barcode Generator** - Support for 8 formats (CODE128, EAN13, EAN8, UPC, CODE39, ITF14, MSI, Pharmacode)
+- **Live Preview** - Real-time barcode generation as you type
+- **Customization** - Adjust line width, height, colors, and display options
+- **Barcode Scanner** - Scan barcodes from uploaded images
+
+### 🎨 **SVG Converter**
+- **SVG to PNG/JPG** - Convert vector graphics to raster images
+- **Custom Dimensions** - Set width and height (100-4000px)
+- **Aspect Ratio** - Maintain original proportions or custom sizing
+- **Background Control** - Transparent backgrounds or custom colors
+
+### 📊 **Excel/CSV Tools**
+- **CSV ↔ JSON** - Convert between CSV and JSON formats
+- **Excel → CSV/JSON** - Extract data from Excel files
+- **Excel → PDF** - Convert Excel spreadsheets to PDF documents
+- **Data Visualization** - Create interactive charts (bar, line, pie) from data
+- **Preview & Download** - View converted data before downloading
+
 ## 🚀 Getting Started
 
 ### Prerequisites
@@ -58,6 +83,11 @@ A comprehensive, modern media conversion application built with Next.js 15, feat
 ### Installation
 
 ```bash
+- **QRCode** - QR code generation
+- **jsQR** - QR code scanning
+- **JsBarcode** - Barcode generation (8 formats)
+- **XLSX** - Excel/CSV file processing
+- **Chart.js** - Data visualization with charts
 # Clone the repository
 git clone https://github.com/CGunasekaran/Media-Converter.git
 cd Media-Converter
@@ -92,20 +122,25 @@ media-converter/
 │   ├── api/              # API routes for server-side processing
 │   │   ├── convert-image/
 │   │   ├── image-to-pdf/
-│   │   ├── image-to-text/
-│   │   ├── pdf-to-image/
-│   │   ├── text-to-image/
-│   │   ├── remove-background/
-│   │   ├── pdf-tools/
-│   │   └── scan-document/
+│   │   ├── scan-document/
+│   │   └── excel-to-pdf/
 │   ├── layout.tsx        # Root layout with header/footer
-│   ├── page.tsx          # Main page with tab navigation
+│   ├── page.tsx          # Main page with section-based layout
 │   └── globals.css       # Global styles
-├── components/           # React components
+├── components/           # React components (14 tools)
 │   ├── BackgroundRemover.tsx
+│   ├── BarcodeTools.tsx
 │   ├── BatchImageProcessor.tsx
 │   ├── DocumentScanner.tsx
+│   ├── ExcelCSVTools.tsx
 │   ├── ImageConverter.tsx
+│   ├── ImageEditor.tsx
+│   ├── ImageToPDF.tsx
+│   ├── ImageToText.tsx
+│   ├── PDFToImage.tsx
+│   ├── PDFTools.tsx
+│   ├── QRCodeTools.tsx
+│   ├── SVGConverterverter.tsx
 │   ├── ImageEditor.tsx
 │   ├── ImageToPDF.tsx
 │   ├── ImageToText.tsx
