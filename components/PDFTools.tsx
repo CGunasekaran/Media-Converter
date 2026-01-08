@@ -1,4 +1,5 @@
 "use client";
+import { useNotification } from "@/components/Toast";
 
 import { useState, useRef } from "react";
 import { downloadFile } from "@/lib/utils";
@@ -12,6 +13,7 @@ type PDFOperation =
   | "add-page-numbers";
 
 export default function PDFTools() {
+  const notification = useNotification();
   const [operation, setOperation] = useState<PDFOperation>("merge");
   const [files, setFiles] = useState<File[]>([]);
   const [loading, setLoading] = useState(false);
@@ -43,7 +45,7 @@ export default function PDFTools() {
 
   const processFiles = async () => {
     if (files.length === 0) {
-      alert("Please select PDF file(s) first");
+      notification.warning("Please select PDF file(s) first");
       return;
     }
 
@@ -313,7 +315,7 @@ export default function PDFTools() {
               <button
                 onClick={() => {
                   navigator.clipboard.writeText(result.text || "");
-                  alert("Text copied to clipboard!");
+                  notification.success("Text copied to clipboard!");
                 }}
                 className="mt-4 w-full px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
               >

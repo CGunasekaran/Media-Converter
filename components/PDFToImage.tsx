@@ -1,4 +1,5 @@
 "use client";
+import { useNotification } from "@/components/Toast";
 
 import { useState } from "react";
 import { useDropzone } from "react-dropzone";
@@ -11,6 +12,7 @@ interface ExtractedImage {
 }
 
 export default function PDFToImage() {
+  const notification = useNotification();
   const [images, setImages] = useState<ExtractedImage[]>([]);
   const [loading, setLoading] = useState(false);
   const [pdfName, setPdfName] = useState("");
@@ -54,7 +56,7 @@ export default function PDFToImage() {
       // Then render each page to a canvas and convert to image
     } catch (error) {
       console.error("Error extracting images:", error);
-      alert("Failed to process PDF file");
+      notification.error("Failed to process PDF file");
     } finally {
       setLoading(false);
     }

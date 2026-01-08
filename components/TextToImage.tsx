@@ -1,9 +1,11 @@
 "use client";
+import { useNotification } from "@/components/Toast";
 
 import { useState, useRef } from "react";
 import { downloadFile } from "@/lib/utils";
 
 export default function TextToImage() {
+  const notification = useNotification();
   const [text, setText] = useState("");
   const [fontSize, setFontSize] = useState(32);
   const [fontColor, setFontColor] = useState("#000000");
@@ -13,7 +15,7 @@ export default function TextToImage() {
 
   const generateImage = () => {
     if (!text.trim()) {
-      alert("Please enter some text");
+      notification.warning("Please enter some text");
       return;
     }
 

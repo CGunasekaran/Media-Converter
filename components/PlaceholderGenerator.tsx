@@ -1,4 +1,5 @@
 "use client";
+import { useNotification } from "@/components/Toast";
 
 import { useState, useRef, useEffect, useCallback } from "react";
 import { downloadFile } from "@/lib/utils";
@@ -6,6 +7,7 @@ import { downloadFile } from "@/lib/utils";
 type PatternType = "solid" | "gradient" | "dots" | "grid" | "diagonal";
 
 export default function PlaceholderGenerator() {
+  const notification = useNotification();
   const [width, setWidth] = useState(600);
   const [height, setHeight] = useState(400);
   const [text, setText] = useState("");
@@ -140,7 +142,7 @@ export default function PlaceholderGenerator() {
 
     const dataURL = canvas.toDataURL();
     navigator.clipboard.writeText(dataURL);
-    alert("Data URL copied to clipboard!");
+    notification.success("Data URL copied to clipboard!");
   };
 
   const presets = [

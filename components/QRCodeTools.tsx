@@ -1,4 +1,5 @@
 "use client";
+import { useNotification } from "@/components/Toast";
 
 import { useState, useRef } from "react";
 import QRCode from "qrcode";
@@ -6,6 +7,7 @@ import jsQR from "jsqr";
 import { downloadFile } from "@/lib/utils";
 
 export default function QRCodeTools() {
+  const notification = useNotification();
   const [mode, setMode] = useState<"generate" | "scan">("generate");
   const [text, setText] = useState("");
   const [qrImage, setQrImage] = useState<string | null>(null);
@@ -22,7 +24,7 @@ export default function QRCodeTools() {
 
   const generateQRCode = async () => {
     if (!text.trim()) {
-      alert("Please enter text or URL");
+      notification.warning("Please enter text or URL");
       return;
     }
 
@@ -39,7 +41,7 @@ export default function QRCodeTools() {
       setQrImage(url);
     } catch (error) {
       console.error("Error generating QR code:", error);
-      alert("Failed to generate QR code");
+      notification.error("Failed to generate QR code");
     } finally {
       setLoading(false);
     }
@@ -71,7 +73,7 @@ export default function QRCodeTools() {
           if (code) {
             setScannedText(code.data);
           } else {
-            alert("No QR code found in the image");
+            notification.info("No QR code found in the image");
           }
           setLoading(false);
         };
@@ -81,7 +83,7 @@ export default function QRCodeTools() {
       reader.readAsDataURL(file);
     } catch (error) {
       console.error("Error scanning QR code:", error);
-      alert("Failed to scan QR code");
+      notification.error("Failed to scan QR code");
       setLoading(false);
     }
   };
@@ -275,7 +277,7 @@ export default function QRCodeTools() {
               <button
                 onClick={() => {
                   navigator.clipboard.writeText(scannedText);
-                  alert("Copied to clipboard!");
+                  notification.success("Copied to clipboard!");
                 }}
                 className="w-full mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
               >

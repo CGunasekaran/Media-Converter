@@ -1,4 +1,5 @@
 "use client";
+import { useNotification } from "@/components/Toast";
 
 import { useState, useRef } from "react";
 import { downloadFile } from "@/lib/utils";
@@ -12,6 +13,7 @@ interface ProcessedFile {
 }
 
 export default function BatchImageProcessor() {
+  const notification = useNotification();
   const [files, setFiles] = useState<File[]>([]);
   const [operation, setOperation] = useState<BatchOperation>("resize");
   const [loading, setLoading] = useState(false);
@@ -35,7 +37,7 @@ export default function BatchImageProcessor() {
 
   const processImages = async () => {
     if (files.length === 0) {
-      alert("Please select images first");
+      notification.warning("Please select images first");
       return;
     }
 
@@ -133,7 +135,7 @@ export default function BatchImageProcessor() {
     } catch (error) {
       console.error("Error processing images:", error);
       setLoading(false);
-      alert("Error processing images");
+      notification.error("Error processing images");
     }
   };
 

@@ -1,4 +1,5 @@
 "use client";
+import { useNotification } from "@/components/Toast";
 
 import { useState, useRef } from "react";
 import { downloadFile } from "@/lib/utils";
@@ -143,6 +144,7 @@ const ICON_SIZES: IconSize[] = [
 type Platform = "all" | "favicon" | "ios" | "android" | "pwa";
 
 export default function IconGenerator() {
+  const notification = useNotification();
   const [sourceImage, setSourceImage] = useState<string | null>(null);
   const [selectedPlatform, setSelectedPlatform] = useState<Platform>("all");
   const [generatedIcons, setGeneratedIcons] = useState<{
@@ -292,7 +294,7 @@ export default function IconGenerator() {
 <link rel="manifest" href="/site.webmanifest">`;
 
     navigator.clipboard.writeText(html);
-    alert("HTML code copied to clipboard!");
+    notification.success("HTML code copied to clipboard!");
   };
 
   const copyManifestJSON = () => {
@@ -317,7 +319,7 @@ export default function IconGenerator() {
     };
 
     navigator.clipboard.writeText(JSON.stringify(manifest, null, 2));
-    alert("Manifest JSON copied to clipboard!");
+    notification.success("Manifest JSON copied to clipboard!");
   };
 
   const filteredIconSizes =

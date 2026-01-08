@@ -1,4 +1,5 @@
 "use client";
+import { useNotification } from "@/components/Toast";
 
 import { useState, useRef } from "react";
 import { downloadFile } from "@/lib/utils";
@@ -6,6 +7,7 @@ import { downloadFile } from "@/lib/utils";
 type Mode = "encode" | "decode";
 
 export default function Base64Tool() {
+  const notification = useNotification();
   const [mode, setMode] = useState<Mode>("encode");
   const [sourceImage, setSourceImage] = useState<string | null>(null);
   const [base64String, setBase64String] = useState("");
@@ -101,28 +103,28 @@ export default function Base64Tool() {
   const copyBase64 = () => {
     if (!base64String) return;
     navigator.clipboard.writeText(base64String);
-    alert("Base64 string copied to clipboard!");
+    notification.success("Base64 string copied to clipboard!");
   };
 
   const copyBase64Only = () => {
     if (!base64String) return;
     const base64Only = base64String.split(",")[1] || base64String;
     navigator.clipboard.writeText(base64Only);
-    alert("Base64 (without data URI) copied to clipboard!");
+    notification.success("Base64 (without data URI) copied to clipboard!");
   };
 
   const copyHTMLImg = () => {
     if (!base64String) return;
     const html = `<img src="${base64String}" alt="Image" />`;
     navigator.clipboard.writeText(html);
-    alert("HTML img tag copied to clipboard!");
+    notification.success("HTML img tag copied to clipboard!");
   };
 
   const copyCSSBackground = () => {
     if (!base64String) return;
     const css = `background-image: url('${base64String}');`;
     navigator.clipboard.writeText(css);
-    alert("CSS background code copied to clipboard!");
+    notification.success("CSS background code copied to clipboard!");
   };
 
   const formatBytes = (bytes: number): string => {

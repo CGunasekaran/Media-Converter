@@ -1,4 +1,5 @@
 "use client";
+import { useNotification } from "@/components/Toast";
 
 import { useState, useRef, useEffect } from "react";
 import JsBarcode from "jsbarcode";
@@ -17,6 +18,7 @@ const BARCODE_FORMATS = [
 ];
 
 export default function BarcodeTools() {
+  const notification = useNotification();
   const [mode, setMode] = useState<"generate" | "scan">("generate");
   const [text, setText] = useState("");
   const [format, setFormat] = useState("CODE128");
@@ -368,7 +370,7 @@ export default function BarcodeTools() {
               <button
                 onClick={() => {
                   navigator.clipboard.writeText(scannedText);
-                  alert("Copied to clipboard!");
+                  notification.success("Copied to clipboard!");
                 }}
                 className="w-full mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
               >

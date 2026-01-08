@@ -1,4 +1,5 @@
 "use client";
+import { useNotification } from "@/components/Toast";
 
 import { useState, useRef } from "react";
 import ExcelJS from "exceljs";
@@ -35,6 +36,7 @@ type ConversionMode =
   | "visualize";
 
 export default function ExcelCSVTools() {
+  const notification = useNotification();
   const [mode, setMode] = useState<ConversionMode>("csv-json");
   const [file, setFile] = useState<File | null>(null);
   const [jsonData, setJsonData] = useState<Record<string, unknown>[] | null>(
@@ -68,7 +70,7 @@ export default function ExcelCSVTools() {
 
   const convertCSVToJSON = async () => {
     if (!file) {
-      alert("Please select a CSV file");
+      notification.warning("Please select a CSV file");
       return;
     }
 
@@ -94,14 +96,14 @@ export default function ExcelCSVTools() {
       setLoading(false);
     } catch (error) {
       console.error("Conversion error:", error);
-      alert("Failed to convert CSV to JSON");
+      notification.error("Failed to convert CSV to JSON");
       setLoading(false);
     }
   };
 
   const convertExcelToCSV = async () => {
     if (!file) {
-      alert("Please select an Excel file");
+      notification.warning("Please select an Excel file");
       return;
     }
 
@@ -126,14 +128,14 @@ export default function ExcelCSVTools() {
       setLoading(false);
     } catch (error) {
       console.error("Conversion error:", error);
-      alert("Failed to convert Excel to CSV");
+      notification.error("Failed to convert Excel to CSV");
       setLoading(false);
     }
   };
 
   const convertExcelToJSON = async () => {
     if (!file) {
-      alert("Please select an Excel file");
+      notification.warning("Please select an Excel file");
       return;
     }
 
@@ -165,14 +167,14 @@ export default function ExcelCSVTools() {
       setLoading(false);
     } catch (error) {
       console.error("Conversion error:", error);
-      alert("Failed to convert Excel to JSON");
+      notification.error("Failed to convert Excel to JSON");
       setLoading(false);
     }
   };
 
   const convertExcelToPDF = async () => {
     if (!file) {
-      alert("Please select an Excel file");
+      notification.warning("Please select an Excel file");
       return;
     }
 
@@ -210,14 +212,14 @@ export default function ExcelCSVTools() {
       setLoading(false);
     } catch (error) {
       console.error("Conversion error:", error);
-      alert("Failed to convert Excel to PDF");
+      notification.error("Failed to convert Excel to PDF");
       setLoading(false);
     }
   };
 
   const visualizeData = async () => {
     if (!file) {
-      alert("Please select a file");
+      notification.warning("Please select a file");
       return;
     }
 
