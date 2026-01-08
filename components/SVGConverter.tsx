@@ -1,4 +1,5 @@
 "use client";
+import { useNotification } from "@/components/Toast";
 
 import { useState, useRef } from "react";
 import { downloadFile } from "@/lib/utils";
@@ -6,6 +7,7 @@ import { downloadFile } from "@/lib/utils";
 type ConversionFormat = "png" | "jpg";
 
 export default function SVGConverter() {
+  const notification = useNotification();
   const [svgFile, setSvgFile] = useState<File | null>(null);
   const [svgContent, setSvgContent] = useState<string>("");
   const [format, setFormat] = useState<ConversionFormat>("png");
@@ -25,7 +27,7 @@ export default function SVGConverter() {
     if (!file) return;
 
     if (!file.type.includes("svg")) {
-      alert("Please select an SVG file");
+      notification.warning("Please select an SVG file");
       return;
     }
 
@@ -37,7 +39,7 @@ export default function SVGConverter() {
 
   const convertSVG = async () => {
     if (!svgContent) {
-      alert("Please select an SVG file first");
+      notification.warning("Please select an SVG file first");
       return;
     }
 
@@ -115,14 +117,14 @@ export default function SVGConverter() {
 
       img.onerror = () => {
         URL.revokeObjectURL(url);
-        alert("Failed to load SVG image");
+        notification.error("Failed to load SVG image");
         setLoading(false);
       };
 
       img.src = url;
     } catch (error) {
       console.error("Conversion error:", error);
-      alert("Failed to convert SVG");
+      notification.error("Failed to convert SVG");
       setLoading(false);
     }
   };

@@ -1,4 +1,5 @@
 "use client";
+import { useNotification } from "@/components/Toast";
 
 import { useState } from "react";
 import { useDropzone } from "react-dropzone";
@@ -11,6 +12,7 @@ interface ImageFile {
 }
 
 export default function ImageToPDF() {
+  const notification = useNotification();
   const [images, setImages] = useState<ImageFile[]>([]);
   const [converting, setConverting] = useState(false);
 
@@ -40,7 +42,7 @@ export default function ImageToPDF() {
 
   const convertToPDF = async () => {
     if (images.length === 0) {
-      alert("Please add at least one image");
+      notification.warning("Please add at least one image");
       return;
     }
 
@@ -75,7 +77,7 @@ export default function ImageToPDF() {
       pdf.save("images-converted.pdf");
     } catch (error) {
       console.error("Error converting to PDF:", error);
-      alert("Failed to convert images to PDF");
+      notification.error("Failed to convert images to PDF");
     } finally {
       setConverting(false);
     }

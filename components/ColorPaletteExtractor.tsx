@@ -1,4 +1,5 @@
 "use client";
+import { useNotification } from "@/components/Toast";
 
 import { useState, useRef } from "react";
 import { downloadFile } from "@/lib/utils";
@@ -11,6 +12,7 @@ interface ColorInfo {
 }
 
 export default function ColorPaletteExtractor() {
+  const notification = useNotification();
   const [image, setImage] = useState<string | null>(null);
   const [colors, setColors] = useState<ColorInfo[]>([]);
   const [colorCount, setColorCount] = useState(5);
@@ -151,7 +153,7 @@ export default function ColorPaletteExtractor() {
     const value =
       format === "hex" ? color.hex : format === "rgb" ? color.rgb : color.hsl;
     navigator.clipboard.writeText(value);
-    alert(`Copied ${value} to clipboard!`);
+    notification.success(`Copied ${value} to clipboard!`);
   };
 
   const exportPalette = () => {
@@ -298,7 +300,7 @@ export default function ColorPaletteExtractor() {
                     <button
                       onClick={() => {
                         navigator.clipboard.writeText(generateGradient());
-                        alert("Gradient CSS copied to clipboard!");
+                        notification.success("Gradient CSS copied to clipboard!");
                       }}
                       className="w-full mt-2 px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700 text-sm"
                     >

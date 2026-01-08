@@ -89,9 +89,8 @@ export async function POST(request: NextRequest) {
     });
   } catch (error) {
     console.error("Background removal error:", error);
-    return NextResponse.json(
-      { error: "Failed to remove background" },
-      { status: 500 }
-    );
+    const errorMessage =
+      error instanceof Error ? error.message : "Failed to remove background";
+    return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 }

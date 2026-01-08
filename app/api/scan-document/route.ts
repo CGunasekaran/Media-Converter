@@ -13,6 +13,13 @@ export async function POST(request: NextRequest) {
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
 
+    if (buffer.length === 0) {
+      return NextResponse.json(
+        { error: "Image file is empty or invalid" },
+        { status: 400 }
+      );
+    }
+
     // Process the image with sharp
     // Auto-crop, enhance contrast and brightness
     const processedBuffer = await sharp(buffer)
@@ -35,9 +42,8 @@ export async function POST(request: NextRequest) {
     });
   } catch (error) {
     console.error("Document scanning error:", error);
-    return NextResponse.json(
-      { error: "Failed to process document" },
-      { status: 500 }
-    );
+    const errorMessage =
+      error instanceof Error ? error.message : "Failed to process document";
+    return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 }

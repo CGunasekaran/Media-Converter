@@ -1,4 +1,5 @@
 "use client";
+import { useNotification } from "@/components/Toast";
 
 import { useState, useRef, useEffect, useCallback } from "react";
 import { downloadFile } from "@/lib/utils";
@@ -22,6 +23,7 @@ interface DrawAction {
 }
 
 export default function ScreenshotTool() {
+  const notification = useNotification();
   const [screenshot, setScreenshot] = useState<string | null>(null);
   const [tool, setTool] = useState<Tool>("pen");
   const [color, setColor] = useState("#FF0000");
@@ -199,8 +201,7 @@ export default function ScreenshotTool() {
         stream.getTracks().forEach((track) => track.stop());
       };
     } catch (error) {
-      console.error("Error capturing screenshot:", error);
-      alert(
+      notification.error(
         "Screenshot capture failed. Please ensure you have granted permission."
       );
     }
@@ -360,10 +361,10 @@ export default function ScreenshotTool() {
           await navigator.clipboard.write([
             new ClipboardItem({ "image/png": blob }),
           ]);
-          alert("Screenshot copied to clipboard!");
+          notification.success("Screenshot copied to clipboard!");
         } catch (error) {
           console.error("Failed to copy:", error);
-          alert("Failed to copy to clipboard");
+          notification.error("Failed to copy to clipboard");
         }
       }
     });

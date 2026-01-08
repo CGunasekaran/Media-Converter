@@ -1,4 +1,5 @@
 "use client";
+import { useNotification } from "@/components/Toast";
 
 import { useState } from "react";
 import { useDropzone } from "react-dropzone";
@@ -6,6 +7,7 @@ import Tesseract from "tesseract.js";
 import { MAX_FILE_SIZE, formatFileSize } from "@/lib/utils";
 
 export default function ImageToText() {
+  const notification = useNotification();
   const [image, setImage] = useState<string | null>(null);
   const [extractedText, setExtractedText] = useState<string>("");
   const [loading, setLoading] = useState(false);
@@ -50,7 +52,7 @@ export default function ImageToText() {
       setExtractedText(result.data.text);
     } catch (error) {
       console.error("Error extracting text:", error);
-      alert("Failed to extract text from image");
+      notification.error("Failed to extract text from image");
     } finally {
       setLoading(false);
     }
@@ -58,7 +60,7 @@ export default function ImageToText() {
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(extractedText);
-    alert("Text copied to clipboard!");
+    notification.success("Text copied to clipboard!");
   };
 
   return (

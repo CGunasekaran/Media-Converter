@@ -1,9 +1,12 @@
 "use client";
+import { useNotification } from "@/components/Toast";
 
 import { useState, useRef } from "react";
 import { downloadFile } from "@/lib/utils";
+import { removeBackground as removeBackgroundLib } from "@imgly/background-removal";
 
 export default function BackgroundRemover() {
+  const notification = useNotification();
   const [image, setImage] = useState<string | null>(null);
   const [processedImage, setProcessedImage] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -38,7 +41,7 @@ export default function BackgroundRemover() {
 
   const removeBackground = async () => {
     if (!image) {
-      alert("Please select an image first");
+      notification.warning("Please select an image first");
       return;
     }
 
@@ -49,34 +52,73 @@ export default function BackgroundRemover() {
       const response = await fetch(image);
       const blob = await response.blob();
 
-      // Create FormData
-      const formData = new FormData();
-      formData.append("file", blob);
-      formData.append("replaceWithColor", replaceWithColor.toString());
-      formData.append("bgColor", bgColor);
+      // Remove background using client-side library
+      const result = await removeBackgroundLib(blob);
 
-      if (replacementImage && !replaceWithColor) {
-        const bgResponse = await fetch(replacementImage);
-        const bgBlob = await bgResponse.blob();
-        formData.append("backgroundImage", bgBlob);
+      // Process the result with color or image replacement if needed
+      if (replaceWithColor || replacementImage) {
+        // Create canvas to composite images
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
+
+        if (!ctx) {
+          throw new Error("Failed to create canvas context");
+        }
+
+        // Load the foreground image (with removed background)
+        const foregroundImg = new Image();
+        const foregroundUrl = URL.createObjectURL(result);
+
+        await new Promise((resolve, reject) => {
+          foregroundImg.onload = resolve;
+          foregroundImg.onerror = reject;
+          foregroundImg.src = foregroundUrl;
+        });
+
+        canvas.width = foregroundImg.width;
+        canvas.height = foregroundImg.height;
+
+        if (replaceWithColor) {
+          // Fill with solid color
+          ctx.fillStyle = bgColor;
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+        } else if (replacementImage) {
+          // Draw replacement image as background
+          const bgImg = new Image();
+          await new Promise((resolve, reject) => {
+            bgImg.onload = resolve;
+            bgImg.onerror = reject;
+            bgImg.src = replacementImage;
+          });
+          ctx.drawImage(bgImg, 0, 0, canvas.width, canvas.height);
+        }
+
+        // Draw foreground on top
+        ctx.drawImage(foregroundImg, 0, 0);
+
+        // Clean up
+        URL.revokeObjectURL(foregroundUrl);
+
+        // Convert canvas to blob
+        const finalBlob = await new Promise<Blob>((resolve, reject) => {
+          canvas.toBlob((blob) => {
+            if (blob) resolve(blob);
+            else reject(new Error("Failed to create blob"));
+          }, "image/png");
+        });
+
+        const url = URL.createObjectURL(finalBlob);
+        setProcessedImage(url);
+      } else {
+        // No replacement, just use the result directly
+        const url = URL.createObjectURL(result);
+        setProcessedImage(url);
       }
-
-      // Send to API
-      const apiResponse = await fetch("/api/remove-background", {
-        method: "POST",
-        body: formData,
-      });
-
-      if (!apiResponse.ok) {
-        throw new Error("Failed to remove background");
-      }
-
-      const resultBlob = await apiResponse.blob();
-      const url = URL.createObjectURL(resultBlob);
-      setProcessedImage(url);
     } catch (error) {
       console.error("Error removing background:", error);
-      alert("Failed to remove background. Please try again.");
+      const errorMessage =
+        error instanceof Error ? error.message : "Unknown error";
+      notification.error(`Failed to remove background: ${errorMessage}`);
     } finally {
       setLoading(false);
     }

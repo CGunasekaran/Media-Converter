@@ -1,9 +1,11 @@
 "use client";
+import { useNotification } from "@/components/Toast";
 
 import { useState, useRef, useEffect } from "react";
 import { downloadFile } from "@/lib/utils";
 
 export default function DocumentScanner() {
+  const notification = useNotification();
   const [stream, setStream] = useState<MediaStream | null>(null);
   const [capturedImage, setCapturedImage] = useState<string | null>(null);
   const [processedImage, setProcessedImage] = useState<string | null>(null);
@@ -31,7 +33,9 @@ export default function DocumentScanner() {
       }
     } catch (error) {
       console.error("Error accessing camera:", error);
-      alert("Failed to access camera. Please grant camera permissions.");
+      notification.error(
+        "Failed to access camera. Please grant camera permissions."
+      );
     }
   };
 
@@ -83,15 +87,21 @@ export default function DocumentScanner() {
       });
 
       if (!apiResponse.ok) {
-        throw new Error("Failed to process document");
+        const errorData = await apiResponse
+          .json()
+          .catch(() => ({ error: "Unknown error" }));
+        const errorMessage = errorData.error || "Failed to process document";
+        notification.error(`${errorMessage}. Showing original image.`);
+        setProcessedImage(capturedImage);
+        setLoading(false);
+        return;
       }
 
       const resultBlob = await apiResponse.blob();
       const url = URL.createObjectURL(resultBlob);
       setProcessedImage(url);
     } catch (error) {
-      console.error("Error processing document:", error);
-      alert("Failed to process document. Showing original image.");
+      notification.error("Failed to process document. Showing original image.");
       setProcessedImage(capturedImage);
     } finally {
       setLoading(false);
@@ -124,7 +134,7 @@ export default function DocumentScanner() {
       downloadFile(pdfBlob, "scanned-document.pdf");
     } catch (error) {
       console.error("Error converting to PDF:", error);
-      alert("Failed to convert to PDF");
+      notification.error("Failed to convert to PDF");
     } finally {
       setLoading(false);
     }

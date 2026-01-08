@@ -1,4 +1,5 @@
 "use client";
+import { useNotification } from "@/components/Toast";
 
 import { useState, useRef } from "react";
 import { downloadFile } from "@/lib/utils";
@@ -19,6 +20,7 @@ interface ResponsiveSet {
 }
 
 export default function ImageOptimizer() {
+  const notification = useNotification();
   const [sourceImage, setSourceImage] = useState<string | null>(null);
   const [originalSize, setOriginalSize] = useState<number>(0);
   const [optimizedImages, setOptimizedImages] = useState<OptimizedImage[]>([]);
@@ -216,7 +218,7 @@ export default function ImageOptimizer() {
 </picture>`;
 
     navigator.clipboard.writeText(html);
-    alert("HTML picture element copied to clipboard!");
+    notification.success("HTML picture element copied to clipboard!");
   };
 
   const copyResponsiveSrcset = () => {
@@ -236,7 +238,7 @@ export default function ImageOptimizer() {
   loading="lazy">`;
 
     navigator.clipboard.writeText(html);
-    alert("Responsive srcset HTML copied to clipboard!");
+    notification.success("Responsive srcset HTML copied to clipboard!");
   };
 
   return (
