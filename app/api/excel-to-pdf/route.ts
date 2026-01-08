@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { jsPDF } from "jspdf";
+import autoTable from "jspdf-autotable";
 
 // Force dynamic rendering
 export const dynamic = "force-dynamic";
@@ -22,60 +23,22 @@ export async function POST(request: NextRequest) {
       format: "a4",
     });
 
-    // Parse HTML table and add to PDF
-    // This is a simple implementation - for complex tables, consider using html2pdf or puppeteer
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(html, "text/html");
-    const table = doc.querySelector("table");
+    // Extract table data from HTML string without using DOMParser
+    const tableData = extractTableData(html);
 
-    if (table) {
-      const rows = Array.from(table.querySelectorAll("tr"));
-      let yPosition = 20;
-      const lineHeight = 7;
-      const margin = 10;
-
-      rows.forEach((row, rowIndex) => {
-        const cells = Array.from(row.querySelectorAll("td, th"));
-        let xPosition = margin;
-        const cellWidth =
-          (pdf.internal.pageSize.width - 2 * margin) / cells.length;
-
-        cells.forEach((cell) => {
-          const text = cell.textContent?.trim() || "";
-
-          // Header styling
-          if (rowIndex === 0) {
-            pdf.setFontSize(10);
-            pdf.setFont("helvetica", "bold");
-          } else {
-            pdf.setFontSize(9);
-            pdf.setFont("helvetica", "normal");
-          }
-
-          pdf.text(text, xPosition, yPosition, {
-            maxWidth: cellWidth - 2,
-          });
-
-          xPosition += cellWidth;
-        });
-
-        yPosition += lineHeight;
-
-        // Add new page if needed
-        if (yPosition > pdf.internal.pageSize.height - 20) {
-          pdf.addPage();
-          yPosition = 20;
-        }
+    if (tableData.length > 0) {
+      // Use autotable for better table rendering
+      autoTable(pdf, {
+        head: [tableData[0]],
+        body: tableData.slice(1),
+        styles: { fontSize: 8 },
+        headStyles: { fillColor: [66, 139, 202] },
+        margin: { top: 10 },
       });
     } else {
-      // If no table found, just add the text content
+      // If no table data, show error message
       pdf.setFontSize(12);
-      pdf.text("Excel Data", 20, 20);
-
-      const textContent = doc.body.textContent || "No content";
-      pdf.text(textContent, 20, 30, {
-        maxWidth: pdf.internal.pageSize.width - 40,
-      });
+      pdf.text("No table data found in Excel file", 20, 20);
     }
 
     // Generate PDF buffer
@@ -94,4 +57,40 @@ export async function POST(request: NextRequest) {
       { status: 500 }
     );
   }
+}
+
+// Helper function to extract table data from HTML string
+function extractTableData(html: string): string[][] {
+  const tableData: string[][] = [];
+
+  // Simple regex-based extraction (alternative to DOMParser)
+  const trMatches = html.match(/<tr[^>]*>([\s\S]*?)<\/tr>/gi);
+
+  if (trMatches) {
+    trMatches.forEach((tr) => {
+      const row: string[] = [];
+      const cellMatches = tr.match(/<t[dh][^>]*>([\s\S]*?)<\/t[dh]>/gi);
+
+      if (cellMatches) {
+        cellMatches.forEach((cell) => {
+          // Remove HTML tags and decode entities
+          const text = cell
+            .replace(/<[^>]+>/g, "")
+            .replace(/&nbsp;/g, " ")
+            .replace(/&amp;/g, "&")
+            .replace(/&lt;/g, "<")
+            .replace(/&gt;/g, ">")
+            .replace(/&quot;/g, '"')
+            .trim();
+          row.push(text);
+        });
+      }
+
+      if (row.length > 0) {
+        tableData.push(row);
+      }
+    });
+  }
+
+  return tableData;
 }

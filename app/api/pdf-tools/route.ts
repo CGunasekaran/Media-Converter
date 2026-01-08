@@ -4,21 +4,8 @@ import { PDFDocument, degrees, rgb, StandardFonts } from "pdf-lib";
 // Force dynamic rendering
 export const dynamic = "force-dynamic";
 
-// Lazy load pdfjs-dist to avoid build issues
-let pdfjsLib: typeof import("pdfjs-dist") | null = null;
-
-async function getPdfjsLib() {
-  if (!pdfjsLib) {
-    pdfjsLib = await import("pdfjs-dist");
-    pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
-  }
-  return pdfjsLib;
-}
-
 export async function POST(request: NextRequest) {
   try {
-    await getPdfjsLib(); // Initialize pdfjs-dist
-
     const formData = await request.formData();
     const files = formData.getAll("files") as File[];
     const operation = formData.get("operation") as string;
@@ -69,10 +56,9 @@ export async function POST(request: NextRequest) {
     });
   } catch (error) {
     console.error("PDF tools error:", error);
-    return NextResponse.json(
-      { error: "Failed to process PDF" },
-      { status: 500 }
-    );
+    const errorMessage =
+      error instanceof Error ? error.message : "Failed to process PDF";
+    return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 }
 
@@ -198,23 +184,40 @@ async function compressPDF(file: File): Promise<PDFDocument> {
 }
 
 async function extractTextFromPDF(file: File): Promise<string> {
-  const pdfjs = await getPdfjsLib();
-  const bytes = await file.arrayBuffer();
-  const uint8Array = new Uint8Array(bytes);
+  try {
+    // Dynamically import pdfjs-dist only when needed
+    const pdfjs = await import("pdfjs-dist/legacy/build/pdf.mjs");
 
-  const loadingTask = pdfjs.getDocument({ data: uint8Array });
-  const pdf = await loadingTask.promise;
+    // Set worker source using the local node_modules version
+    pdfjs.GlobalWorkerOptions.workerSrc = new URL(
+      "pdfjs-dist/legacy/build/pdf.worker.mjs",
+      import.meta.url
+    ).toString();
 
-  let fullText = "";
+    const bytes = await file.arrayBuffer();
+    const uint8Array = new Uint8Array(bytes);
 
-  for (let i = 1; i <= pdf.numPages; i++) {
-    const page = await pdf.getPage(i);
-    const textContent = await page.getTextContent();
-    const pageText = textContent.items
-      .map((item) => ("str" in item ? item.str : ""))
-      .join(" ");
-    fullText += `\n--- Page ${i} ---\n${pageText}\n`;
+    const loadingTask = pdfjs.getDocument({ data: uint8Array });
+    const pdf = await loadingTask.promise;
+
+    let fullText = "";
+
+    for (let i = 1; i <= pdf.numPages; i++) {
+      const page = await pdf.getPage(i);
+      const textContent = await page.getTextContent();
+      const pageText = textContent.items
+        .map((item) => ("str" in item ? item.str : ""))
+        .join(" ");
+      fullText += `\n--- Page ${i} ---\n${pageText}\n`;
+    }
+
+    return fullText;
+  } catch (error) {
+    console.error("Text extraction error:", error);
+    throw new Error(
+      `Failed to extract text from PDF: ${
+        error instanceof Error ? error.message : "Unknown error"
+      }`
+    );
   }
-
-  return fullText;
 }
